@@ -1,9 +1,8 @@
-import { MAILER_CONFIG } from '@/core';
+import { MAILER_CONFIG, NAME_APP_COMPANY } from '@/core';
 import { Injectable } from '@nestjs/common';
 import { createTransport, Transporter } from 'nodemailer';
 import * as hbs from 'nodemailer-express-handlebars';
-import path from 'path';
-import { MAIL_SUBJECT, MAIL_TEMPLATE } from '../interface';
+import { MAILER_TEMPLATE_ENUM } from '../interface';
 import { getMailOptions } from '../util';
 
 export const handlerbarOptions: hbs.NodemailerExpressHandlebarsOptions = {
@@ -31,22 +30,28 @@ export class MailerService {
   }
 
   async sendWelcomeMail(to: string, username: string) {
-    const mailOptions = getMailOptions(
-      to,
-      MAIL_SUBJECT.WELCOME,
-      MAIL_TEMPLATE.WELCOME,
-      { name: username, company: 'Shopp Acc ' },
-    );
+    const mailOptions = getMailOptions(to, MAILER_TEMPLATE_ENUM.WELCOME, {
+      username,
+      company: NAME_APP_COMPANY,
+    });
     return this.transporter.sendMail(mailOptions);
   }
 
   async sendResetPasswordMail(to: string, token: string, username: string) {
     const mailOptions = getMailOptions(
       to,
-      MAIL_SUBJECT.RESET_PASSWORD,
-      MAIL_TEMPLATE.RESET_PASSWORD,
-      { name: username, token },
+      MAILER_TEMPLATE_ENUM.RESET_PASSWORD,
+      { username, token, company: NAME_APP_COMPANY },
     );
+    return this.transporter.sendMail(mailOptions);
+  }
+
+  async sendSubmitMail(to: string, username: string, token: string) {
+    const mailOptions = getMailOptions(to, MAILER_TEMPLATE_ENUM.SUBMIT_USER, {
+      username,
+      token,
+      company: NAME_APP_COMPANY,
+    });
     return this.transporter.sendMail(mailOptions);
   }
 }

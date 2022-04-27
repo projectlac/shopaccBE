@@ -2,6 +2,8 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { v4 as uuid } from 'uuid';
 
+export const NAME_APP_COMPANY = 'Shopp Acc';
+
 export const MAILER_CONFIG = {
   HOST: 'smtp.gmail.com',
   PORT: 587,

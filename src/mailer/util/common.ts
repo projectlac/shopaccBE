@@ -1,22 +1,21 @@
 import { MAILER_CONFIG } from '@/core';
 import {
-  MAIL_TEMPLATE,
   MailContext,
   MailerOptions,
-  MAIL_SUBJECT,
+  MAILER_TEMPLATE,
+  MAILER_TEMPLATE_ENUM,
 } from '../interface';
 
 export const getMailOptions = (
   to: string,
-  subject: MAIL_SUBJECT,
-  template: MAIL_TEMPLATE,
+  mailerTemplate: MAILER_TEMPLATE_ENUM,
   context: MailContext,
 ): MailerOptions => {
   return {
     from: MAILER_CONFIG.FROM,
     to,
-    subject,
-    template,
+    subject: MAILER_TEMPLATE[mailerTemplate].SUBJECT,
+    template: MAILER_TEMPLATE[mailerTemplate].TEMPLATE,
     context,
   };
 };

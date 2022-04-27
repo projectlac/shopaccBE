@@ -32,6 +32,11 @@ export class AuthController {
     return this.authService.createNewUser(newUserDto);
   }
 
+  @Post('sign-up/:token')
+  async submitSignUpUser(@Param('token') token: string) {
+    return this.authService.submitCreateNewUser(token);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Patch('change-password')
   changePassword(

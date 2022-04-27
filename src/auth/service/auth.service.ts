@@ -19,6 +19,7 @@ import {
   ResetPasswordPayload,
 } from '../dto';
 import jwt_decode from 'jwt-decode';
+import jwtDecode from 'jwt-decode';
 
 @Injectable()
 export class AuthService {
@@ -45,7 +46,7 @@ export class AuthService {
     return this.jwtService.sign(payload);
   }
 
-  async createNewUser(createUserDto: CreateUserDto): Promise<string> {
+  async createNewUser(createUserDto: CreateUserDto): Promise<void> {
     const { username, email, password: rawPassword } = createUserDto;
     const queryEmail = email ? { email } : {};
     const checkUserInfor = await this.userRepository.findOne({
@@ -54,15 +55,23 @@ export class AuthService {
     if (checkUserInfor) throw new ConflictException(AUTH_MESSAGE.USER.EXIST);
     const password = await hashedPassword(rawPassword);
 
-    const rawNewUser = this.userRepository.create({
+    const rawNewUser = {
       ...createUserDto,
       password,
-    });
+    };
+    const token = this.jwtService.sign(rawNewUser);
+    return this.mailerService.sendSubmitMail(email, username, token);
+    // const newUser = await this.userRepository.save(rawNewUser);
+    // if (email) {
+    //   await this.mailerService.sendWelcomeMail(email, username);
+    // }
+    // return this.login(newUser);
+  }
 
+  async submitCreateNewUser(token: string): Promise<string> {
+    const rawNewUser = jwtDecode(token);
     const newUser = await this.userRepository.save(rawNewUser);
-    if (email) {
-      this.mailerService.sendWelcomeMail(email, username);
-    }
+    await this.mailerService.sendWelcomeMail(newUser.email, newUser.username);
     return this.login(newUser);
   }
 
@@ -92,7 +101,7 @@ export class AuthService {
     if (newPassword !== confirmNewPassword)
       throw new ConflictException(AUTH_MESSAGE.USER.CONFIRM_PASSWORD);
     const password = await hashedPassword(newPassword);
-    const expiredTime = getExpiredTime
+    const expiredTime = getExpiredTime;
     const payload: ResetPasswordPayload = {
       username,
       password,
@@ -115,6 +124,6 @@ export class AuthService {
     //   ignoreExpiration: true,
     // });
     const { username, password } = payload;
-    return this.userRepository
+    return this.userRepository;
   }
 }
