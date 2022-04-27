@@ -54,3 +54,11 @@ export const JWT_EMAIL_CONFIG = {
   // expiresIn: '24h',
   expiresIn: '300s',
 };
+
+export const ROLE_CONTEXT = 'roles';
+
+export const POST_CONFIG = {
+  LENGTH: { MIN: 8 },
+  LIMIT:10
+};
+

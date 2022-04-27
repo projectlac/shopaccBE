@@ -14,4 +14,5 @@ export class ChangePasswordDto extends NewPasswordDto {
 export interface ResetPasswordPayload {
   username: string;
   password: string;
+  expiredTime: Date;
 }

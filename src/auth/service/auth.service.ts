@@ -1,25 +1,30 @@
-import { getExpiredTime } from './../../mailer/util/common';
+import { compareTimeExpired } from './../util/common';
 import {
   AUTH_MESSAGE,
   checkIsMatchPassword,
+  EXPIRES_IN_MINUTE,
   hashedPassword,
   JWT_EMAIL_CONFIG,
 } from '@/core/';
 import { PayloadTokenUser, User, UserWithOutPassword } from '@/entity';
 import { MailerService } from '@/mailer';
 import { UserRepository } from '@/repository';
-import { ConflictException } from '@nestjs/common';
-import { NotFoundException } from '@nestjs/common';
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { default as jwtDecode, default as jwt_decode } from 'jwt-decode';
 import {
   ChangePasswordDto,
   CreateUserDto,
   ForgetPasswordDto,
   ResetPasswordPayload,
 } from '../dto';
-import jwt_decode from 'jwt-decode';
-import jwtDecode from 'jwt-decode';
+import { getExpiredTime } from './../../mailer/util/common';
 
 @Injectable()
 export class AuthService {
@@ -61,16 +66,19 @@ export class AuthService {
     };
     const token = this.jwtService.sign(rawNewUser);
     return this.mailerService.sendSubmitMail(email, username, token);
-    // const newUser = await this.userRepository.save(rawNewUser);
-    // if (email) {
-    //   await this.mailerService.sendWelcomeMail(email, username);
-    // }
-    // return this.login(newUser);
   }
 
   async submitCreateNewUser(token: string): Promise<string> {
-    const rawNewUser = jwtDecode(token);
-    const newUser = await this.userRepository.save(rawNewUser);
+    const rawNewUser = jwtDecode<User>(token);
+    const checkExistUser = await this.userRepository.findOne({
+      username: rawNewUser.username,
+    });
+    if (checkExistUser)
+      throw new HttpException(AUTH_MESSAGE.USER.SUBMITTED, HttpStatus.ACCEPTED);
+    const newUser = await this.userRepository.save({
+      ...rawNewUser,
+      confirmedEmail: true,
+    });
     await this.mailerService.sendWelcomeMail(newUser.email, newUser.username);
     return this.login(newUser);
   }
@@ -101,15 +109,13 @@ export class AuthService {
     if (newPassword !== confirmNewPassword)
       throw new ConflictException(AUTH_MESSAGE.USER.CONFIRM_PASSWORD);
     const password = await hashedPassword(newPassword);
-    const expiredTime = getExpiredTime;
+    const expiredTime = getExpiredTime(EXPIRES_IN_MINUTE.FIVE_MINUTE);
     const payload: ResetPasswordPayload = {
       username,
       password,
+      expiredTime,
     };
-    const tokenResetPassword = this.jwtService.sign(payload, {
-      secret: JWT_EMAIL_CONFIG.secret,
-      expiresIn: JWT_EMAIL_CONFIG.expiresIn,
-    });
+    const tokenResetPassword = this.jwtService.sign(payload);
     return this.mailerService.sendResetPasswordMail(
       user.email,
       tokenResetPassword,
@@ -119,11 +125,13 @@ export class AuthService {
 
   async verifyResetPassword(tokenResetPassword: string) {
     const payload: ResetPasswordPayload = jwt_decode(tokenResetPassword);
-    // const payload = this.jwtService.verify(tokenResetPassword, {
-    //   secret: JWT_EMAIL_CONFIG.secret,
-    //   ignoreExpiration: true,
-    // });
-    const { username, password } = payload;
-    return this.userRepository;
+    const { username, password, expiredTime } = payload;
+    if (!compareTimeExpired(expiredTime)) {
+      throw new HttpException(
+        AUTH_MESSAGE.TOKEN.EXPIRED,
+        HttpStatus.REQUEST_TIMEOUT,
+      );
+    }
+    return this.userRepository.update({ username }, { password });
   }
 }

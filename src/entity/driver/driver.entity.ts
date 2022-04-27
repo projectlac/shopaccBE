@@ -1,6 +1,7 @@
 import { Column, Entity } from 'typeorm';
 import { BaseColumn } from '../base';
 
+
 @Entity()
 export class Driver extends BaseColumn {
   @Column()

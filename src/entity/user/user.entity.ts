@@ -1,5 +1,7 @@
-import { Entity, Column } from 'typeorm';
+import { Exclude } from 'class-transformer';
+import { Entity, Column, OneToMany } from 'typeorm';
 import { BaseColumn } from '../base';
+import { Post } from '../post';
 
 export enum USER_ROLE {
   ADMIN = 'ADMIN',
@@ -25,6 +27,7 @@ export class User extends BaseColumn {
   email: string;
 
   @Column()
+  @Exclude()
   password: string;
 
   @Column({ enum: USER_ROLE, default: USER_ROLE.USER })
@@ -32,4 +35,7 @@ export class User extends BaseColumn {
 
   @Column({ default: false })
   confirmedEmail: boolean;
+
+  @OneToMany(() => Post, (post) => post.user, { nullable: true,cascade:true })
+  posts: Post[];
 }
