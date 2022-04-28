@@ -23,6 +23,10 @@ export const POST_MESSAGE = {
   NOT_FOUND: 'Post not found!',
 };
 
+export const TAG_MESSAGE={
+  CONFLICT:'This tag title existed!'
+}
+
 export enum EXPIRES_IN_MINUTE {
   FIVE_MINUTE = 5,
 }
