@@ -1,17 +1,9 @@
 import { POST_CONFIG, POST_MESSAGE } from '@/core';
 import { DriverService } from '@/driver';
-import {
-  Driver,
-  Post,
-  POST_RELATION,
-  POST_TABLE_NAME,
-  TAG_RELATION,
-  User,
-} from '@/entity';
+import { Post, POST_RELATION, User } from '@/entity';
 import { DriverRepository, PostRepository, TagRepository } from '@/repository';
-import { HttpException, HttpStatus } from '@nestjs/common';
-import { Injectable } from '@nestjs/common';
-import { Any, Connection, In } from 'typeorm';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { In } from 'typeorm';
 import {
   CreatePostDto,
   QueryPostDto,
@@ -112,7 +104,7 @@ export class PostService {
       return this.postRepository.find({
         skip: offset,
         take: limit,
-        relations:[POST_RELATION.TAG]
+        relations: [POST_RELATION.TAG],
       });
     } catch (error) {
       console.log(error);

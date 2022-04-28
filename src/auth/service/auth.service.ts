@@ -1,12 +1,15 @@
-import { compareTimeExpired } from './../util/common';
 import {
   AUTH_MESSAGE,
   checkIsMatchPassword,
   EXPIRES_IN_MINUTE,
   hashedPassword,
-  JWT_EMAIL_CONFIG,
 } from '@/core/';
-import { PayloadTokenUser, User, UserWithOutPassword, USER_ROLE } from '@/entity';
+import {
+  PayloadTokenUser,
+  User,
+  UserWithOutPassword,
+  USER_ROLE,
+} from '@/entity';
 import { MailerService } from '@/mailer';
 import { UserRepository } from '@/repository';
 import {
@@ -18,6 +21,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { default as jwtDecode, default as jwt_decode } from 'jwt-decode';
+import { UpdateResult } from 'typeorm';
 import {
   ChangePasswordDto,
   CreateUserDto,
@@ -26,7 +30,7 @@ import {
   UpdateUserRoleDto,
 } from '../dto';
 import { getExpiredTime } from './../../mailer/util/common';
-import { UpdateResult } from 'typeorm';
+import { compareTimeExpired } from './../util/common';
 
 @Injectable()
 export class AuthService {
@@ -137,25 +141,31 @@ export class AuthService {
     return this.userRepository.update({ username }, { password });
   }
 
-  async createAdminUser(createUserDto: CreateUserDto):Promise<User>{
-    const password = await hashedPassword(createUserDto.password)
+  async createAdminUser(createUserDto: CreateUserDto): Promise<User> {
+    const password = await hashedPassword(createUserDto.password);
     const newAdmin = this.userRepository.create({
       ...createUserDto,
       password,
-      role:USER_ROLE.ADMIN,
-      confirmedEmail:true
-    })
-    return this.userRepository.save(newAdmin)
+      role: USER_ROLE.ADMIN,
+      confirmedEmail: true,
+    });
+    return this.userRepository.save(newAdmin);
   }
 
-  async updateUserRole(updateUserRoleDto: UpdateUserRoleDto):Promise<UpdateResult>{
-    const {username,role} = updateUserRoleDto
-    const checkUser = await this.userRepository.findOne({username})
-    if(!checkUser) throw new HttpException(AUTH_MESSAGE.USER.NOT_FOUND,HttpStatus.NOT_FOUND)
-    return this.userRepository.update({username},{role})
+  async updateUserRole(
+    updateUserRoleDto: UpdateUserRoleDto,
+  ): Promise<UpdateResult> {
+    const { username, role } = updateUserRoleDto;
+    const checkUser = await this.userRepository.findOne({ username });
+    if (!checkUser)
+      throw new HttpException(
+        AUTH_MESSAGE.USER.NOT_FOUND,
+        HttpStatus.NOT_FOUND,
+      );
+    return this.userRepository.update({ username }, { role });
   }
 
-  async getAllUser():Promise<User[]>{
-    return this.userRepository.find()
+  async getAllUser(): Promise<User[]> {
+    return this.userRepository.find();
   }
 }

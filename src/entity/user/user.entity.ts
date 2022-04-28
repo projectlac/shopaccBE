@@ -1,5 +1,6 @@
 import { Exclude } from 'class-transformer';
 import { Entity, Column, OneToMany } from 'typeorm';
+import { Account } from '../account';
 import { BaseColumn } from '../base';
 import { Post } from '../post';
 
@@ -28,7 +29,7 @@ export class User extends BaseColumn {
   @Column({ nullable: true })
   email: string;
 
-  @Column({select:false})
+  @Column({ select: false })
   @Exclude()
   password: string;
 
@@ -43,4 +44,7 @@ export class User extends BaseColumn {
 
   @OneToMany(() => Post, (post) => post.user, { nullable: true, cascade: true })
   posts: Post[];
+
+  @OneToMany(() => Account, (account) => account.user, { nullable: true })
+  accounts: Account[];
 }

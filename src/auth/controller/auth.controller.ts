@@ -1,13 +1,21 @@
 import { UserWithOutPassword } from '@/entity';
-import { UseGuards } from '@nestjs/common';
-import { Post } from '@nestjs/common';
-import { Body } from '@nestjs/common';
-import { Patch } from '@nestjs/common';
-import { Param } from '@nestjs/common';
-import { Get } from '@nestjs/common';
-import { Controller } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+
 import { CurrentUser } from '../decorator';
-import { ChangePasswordDto, CreateUserDto, ForgetPasswordDto, UpdateUserRoleDto } from '../dto';
+import {
+  ChangePasswordDto,
+  CreateUserDto,
+  ForgetPasswordDto,
+  UpdateUserRoleDto,
+} from '../dto';
 import { JwtAuthGuard, LocalAuthGuard, RolesGuard } from '../guard';
 import { AuthService } from '../service';
 
@@ -61,7 +69,7 @@ export class AuthController {
 
   @Patch('update-role')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  updateRoleUser(@Body() updateUserRole: UpdateUserRoleDto){
-    return this.authService.updateUserRole(updateUserRole)
+  updateRoleUser(@Body() updateUserRole: UpdateUserRoleDto) {
+    return this.authService.updateUserRole(updateUserRole);
   }
 }

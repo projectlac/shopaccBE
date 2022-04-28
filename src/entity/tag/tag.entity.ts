@@ -1,6 +1,5 @@
-import { Entity, ManyToMany, Column, OneToMany, ManyToOne } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 import { BaseColumn } from '../base';
-import { Post } from '../post';
 
 export enum TAG_RELATION {
   POST = 'posts',

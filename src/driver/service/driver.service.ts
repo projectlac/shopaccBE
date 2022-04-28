@@ -1,9 +1,9 @@
-import { DRIVER_MESSAGE, DRIVE_CONFIG } from '@/core';
-import { Injectable } from '@nestjs/common';
-import { OAuth2Client } from 'google-auth-library';
-import { google, drive_v3 } from 'googleapis';
-import * as fs from 'fs';
+import { DRIVE_CONFIG } from '@/core';
 import { DriverRepository } from '@/repository';
+import { Injectable } from '@nestjs/common';
+import * as fs from 'fs';
+import { OAuth2Client } from 'google-auth-library';
+import { drive_v3, google } from 'googleapis';
 @Injectable()
 export class DriverService {
   private oauth2Client: OAuth2Client;

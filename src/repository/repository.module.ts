@@ -1,17 +1,19 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Driver, Post, Tag, User } from '@/entity';
+import { Account, Driver, Post, Tag, User } from '@/entity';
 import { Module } from '@nestjs/common';
 import { DriverRepository } from './driver';
 import { UserRepository } from './user';
 import { PostRepository } from './post';
 import { TagRepository } from './tag';
+import { AccountRepository } from './account';
 
-const ENTITY_LIST = [User, Driver, Post, Tag];
+const ENTITY_LIST = [User, Driver, Post, Tag, Account];
 const REPOSITORY_LIST = [
   UserRepository,
   DriverRepository,
   PostRepository,
   TagRepository,
+  AccountRepository,
 ];
 
 @Module({
