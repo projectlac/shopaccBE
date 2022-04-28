@@ -7,8 +7,8 @@ import { Param } from '@nestjs/common';
 import { Get } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { CurrentUser } from '../decorator';
-import { ChangePasswordDto, CreateUserDto, ForgetPasswordDto } from '../dto';
-import { JwtAuthGuard, LocalAuthGuard } from '../guard';
+import { ChangePasswordDto, CreateUserDto, ForgetPasswordDto, UpdateUserRoleDto } from '../dto';
+import { JwtAuthGuard, LocalAuthGuard, RolesGuard } from '../guard';
 import { AuthService } from '../service';
 
 @Controller('auth')
@@ -57,5 +57,11 @@ export class AuthController {
   @Patch('reset-password/:token')
   resetPassword(@Param('token') token: string) {
     return this.authService.verifyResetPassword(token);
+  }
+
+  @Patch('update-role')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  updateRoleUser(@Body() updateUserRole: UpdateUserRoleDto){
+    return this.authService.updateUserRole(updateUserRole)
   }
 }

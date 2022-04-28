@@ -23,8 +23,10 @@ import {
   CreateUserDto,
   ForgetPasswordDto,
   ResetPasswordPayload,
+  UpdateUserRoleDto,
 } from '../dto';
 import { getExpiredTime } from './../../mailer/util/common';
+import { UpdateResult } from 'typeorm';
 
 @Injectable()
 export class AuthService {
@@ -144,5 +146,12 @@ export class AuthService {
       confirmedEmail:true
     })
     return this.userRepository.save(newAdmin)
+  }
+
+  async updateUserRole(updateUserRoleDto: UpdateUserRoleDto):Promise<UpdateResult>{
+    const {username,role} = updateUserRoleDto
+    const checkUser = await this.userRepository.findOne({username})
+    if(!checkUser) throw new HttpException(AUTH_MESSAGE.USER.NOT_FOUND,HttpStatus.NOT_FOUND)
+    return this.userRepository.update({username},{role})
   }
 }
