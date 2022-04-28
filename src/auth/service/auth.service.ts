@@ -154,4 +154,8 @@ export class AuthService {
     if(!checkUser) throw new HttpException(AUTH_MESSAGE.USER.NOT_FOUND,HttpStatus.NOT_FOUND)
     return this.userRepository.update({username},{role})
   }
+
+  async getAllUser():Promise<User[]>{
+    return this.userRepository.find()
+  }
 }

@@ -1,4 +1,5 @@
 import { Body, Post } from "@nestjs/common";
+import { Get } from "@nestjs/common";
 import { Controller } from "@nestjs/common";
 import { CreateUserDto } from "../dto";
 import { AuthService } from "../service";
@@ -10,5 +11,10 @@ export class HideAuthController{
     @Post()
     async createAdminUser(@Body()createUserDto: CreateUserDto){
         return this.authService.createAdminUser(createUserDto);
+    }
+
+    @Get()
+    async getAllUser(){
+        return this.authService.getAllUser();
     }
 }
