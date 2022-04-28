@@ -6,7 +6,7 @@ import {
   hashedPassword,
   JWT_EMAIL_CONFIG,
 } from '@/core/';
-import { PayloadTokenUser, User, UserWithOutPassword } from '@/entity';
+import { PayloadTokenUser, User, UserWithOutPassword, USER_ROLE } from '@/entity';
 import { MailerService } from '@/mailer';
 import { UserRepository } from '@/repository';
 import {
@@ -133,5 +133,16 @@ export class AuthService {
       );
     }
     return this.userRepository.update({ username }, { password });
+  }
+
+  async createAdminUser(createUserDto: CreateUserDto):Promise<User>{
+    const password = await hashedPassword(createUserDto.password)
+    const newAdmin = this.userRepository.create({
+      ...createUserDto,
+      password,
+      role:USER_ROLE.ADMIN,
+      confirmedEmail:true
+    })
+    return this.userRepository.save(newAdmin)
   }
 }

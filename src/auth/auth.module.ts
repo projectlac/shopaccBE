@@ -1,7 +1,7 @@
 import { RepositoryModule } from '@/repository/';
 import { AuthService, JwtStrategy, LocalStrategy } from './service';
 import { Module } from '@nestjs/common';
-import { AuthController } from './controller';
+import { AuthController, HideAuthController } from './controller';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JWT_CONFIG } from '@/core';
@@ -17,7 +17,7 @@ import { MailerModule } from '@/mailer';
     }),
     MailerModule,
   ],
-  controllers: [AuthController],
+  controllers: [AuthController,HideAuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy],
   exports: [AuthService],
 })
