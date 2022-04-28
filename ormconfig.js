@@ -1,5 +1,5 @@
 module.exports = {
-  // type: process.env['TYPEORM_DRIVER'] || 'postgres',
+  type: process.env['TYPEORM_DRIVER'] || 'postgres',
   // host: process.env['POSTGRES_HOST'] || 'localhost',
   // port: parseInt(process.env['POSTGRES_PORT'] || '5432', 10),
   // username: process.env['POSTGRES_USER'] || 'postgres',
