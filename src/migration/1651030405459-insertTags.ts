@@ -1,3 +1,4 @@
+import { TAG_TABLE_NAME } from '@/entity';
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class insertTags1651030405459 implements MigrationInterface {
@@ -12,7 +13,7 @@ export class insertTags1651030405459 implements MigrationInterface {
     await queryRunner.manager
       .createQueryBuilder()
       .insert()
-      .into('tag')
+      .into(TAG_TABLE_NAME)
       .values(this.listTags)
       .execute();
   }

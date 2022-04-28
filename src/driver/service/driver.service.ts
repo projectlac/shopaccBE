@@ -25,7 +25,7 @@ export class DriverService {
 
   async uploadFile(file: Express.Multer.File) {
     const { filename, path, mimetype } = file;
-    const fileUpload = fs.createReadStream(`./${file.path}`);
+    const fileUpload = fs.createReadStream(`./${path}`);
     const { data: fileData } = await this.drive.files.create({
       requestBody: {
         name: filename,
@@ -36,7 +36,7 @@ export class DriverService {
         body: fileUpload,
       },
     });
-    fs.unlinkSync(`./${file.path}`);
+    fs.unlinkSync(`./${path}`);
     const { data: linkData } = await this.generatePublicUrl(fileData.id);
     const { id: driverId, ...otherFileData } = fileData;
     const newDriverImage = this.driverRepository.create({

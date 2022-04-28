@@ -1,8 +1,9 @@
 import { Column, Entity } from 'typeorm';
 import { BaseColumn } from '../base';
 
+export const DRIVER_TABLE_NAME = 'driver';
 
-@Entity()
+@Entity(DRIVER_TABLE_NAME)
 export class Driver extends BaseColumn {
   @Column()
   driverId: string;

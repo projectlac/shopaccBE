@@ -18,9 +18,10 @@ export const AUTH_MESSAGE = {
   },
 };
 
-export const POST_MESSAGE={
-  DELETE:'Delete post success!'
-}
+export const POST_MESSAGE = {
+  DELETE: 'Delete post success!',
+  NOT_FOUND: 'Post not found!',
+};
 
 export enum EXPIRES_IN_MINUTE {
   FIVE_MINUTE = 5,

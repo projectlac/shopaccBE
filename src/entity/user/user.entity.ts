@@ -18,7 +18,9 @@ export interface PayloadTokenUser {
 
 export type UserWithOutPassword = Omit<User, 'password'>;
 
-@Entity()
+export const USER_TABLE_NAME = 'user';
+
+@Entity('user')
 export class User extends BaseColumn {
   @Column({ unique: true })
   username: string;
@@ -36,6 +38,9 @@ export class User extends BaseColumn {
   @Column({ default: false })
   confirmedEmail: boolean;
 
-  @OneToMany(() => Post, (post) => post.user, { nullable: true,cascade:true })
+  @Column({ default: false })
+  isRecievePost: boolean;
+
+  @OneToMany(() => Post, (post) => post.user, { nullable: true, cascade: true })
   posts: Post[];
 }

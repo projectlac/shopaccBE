@@ -6,5 +6,5 @@ export class CreatePostDto {
   title: string;
   @IsNotEmpty()
   content: string;
-  tags: [string];
+  tags: string;
 }

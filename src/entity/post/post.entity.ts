@@ -5,6 +5,7 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   OneToOne,
 } from 'typeorm';
 import { BaseColumn } from '../base';
@@ -16,9 +17,12 @@ export enum POST_RELATION {
   IMAGE = 'image',
   USER = 'user',
   TAG = 'tags',
+  POST_TAGS_TAG = 'post_tags_tag',
 }
 
-@Entity()
+export const POST_TABLE_NAME = 'post';
+
+@Entity('post')
 export class Post extends BaseColumn {
   @Column()
   title: string;
@@ -33,7 +37,7 @@ export class Post extends BaseColumn {
   @ManyToOne(() => User, (user) => user.posts, { nullable: true })
   user: User;
 
-  @ManyToMany(() => Tag, (tag) => tag.posts)
-  @JoinTable()
+  @ManyToMany(() => Tag)
+  @JoinTable({ name: POST_RELATION.POST_TAGS_TAG })
   tags: Tag[];
 }
