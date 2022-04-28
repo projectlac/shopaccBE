@@ -112,6 +112,7 @@ export class PostService {
       return this.postRepository.find({
         skip: offset,
         take: limit,
+        relations:[POST_RELATION.TAG]
       });
     } catch (error) {
       console.log(error);
