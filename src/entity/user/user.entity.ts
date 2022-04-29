@@ -29,7 +29,7 @@ export class User extends BaseColumn {
   @Column({ nullable: true })
   email: string;
 
-  @Column({ select: false })
+  @Column()
   @Exclude()
   password: string;
 

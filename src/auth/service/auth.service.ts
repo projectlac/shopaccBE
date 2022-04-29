@@ -43,7 +43,7 @@ export class AuthService {
   async validateUser(
     username: string,
     password: string,
-  ): Promise<UserWithOutPassword | null> {
+  ): Promise<User | null> {
     const user = await this.userRepository.findOne({ username });
     if (!user) throw new NotFoundException(AUTH_MESSAGE.USER.NOT_FOUND);
     const isMatch = await checkIsMatchPassword(password, user.password);
