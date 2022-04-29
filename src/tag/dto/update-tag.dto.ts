@@ -1,4 +1,8 @@
+import { ApiProperty } from "@nestjs/swagger"
+
 export class UpdateTagDto{
-    title?:string
-    content?:string
+  @ApiProperty()
+  title?:string
+  @ApiProperty()
+  content?:string
 }

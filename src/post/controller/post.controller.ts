@@ -4,11 +4,9 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
   Param,
   Patch,
   Post,
-  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -17,10 +15,13 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { v4 as uuid } from 'uuid';
-import { CreatePostDto, QueryPostDto, UpdatePostDto } from '../dto';
+import { CreatePostDto, UpdatePostDto } from '../dto';
 import { PostService } from '../service';
+import { ApiTags, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 
 @Controller('post')
+@ApiTags('post')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class PostController {
   constructor(private postService: PostService) {}
@@ -31,7 +32,7 @@ export class PostController {
     FileInterceptor('file', {
       storage: diskStorage({
         destination: './uploads',
-        filename: (req, file, cb) => {
+        filename: (_req, file, cb) => {
           const randomName = uuid();
           cb(null, `${randomName}${extname(file.originalname)}`);
         },
@@ -52,13 +53,14 @@ export class PostController {
     FileInterceptor('file', {
       storage: diskStorage({
         destination: './uploads',
-        filename: (req, file, cb) => {
+        filename: (_req, file, cb) => {
           const randomName = uuid();
           cb(null, `${randomName}${extname(file.originalname)}`);
         },
       }),
     }),
   )
+  @ApiParam({ name: 'id' })
   async updatePost(
     @Param('id') id: string,
     @Body() updatePostDto: UpdatePostDto,
@@ -68,6 +70,7 @@ export class PostController {
   }
 
   @Delete('delete/:id')
+  @ApiParam({ name: 'id' })
   @Roles(USER_ROLE.ADMIN)
   async deletePost(@Param('id') id: string) {
     return this.postService.deletePost(id);

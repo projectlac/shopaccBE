@@ -14,17 +14,22 @@ import {
   ChangePasswordDto,
   CreateUserDto,
   ForgetPasswordDto,
+  LoginUserDto,
   UpdateUserRoleDto,
 } from '../dto';
 import { JwtAuthGuard, LocalAuthGuard, RolesGuard } from '../guard';
 import { AuthService } from '../service';
+import { ApiTags, ApiBearerAuth, ApiParam, ApiBody } from '@nestjs/swagger';
 
 @Controller('auth')
+@ApiTags('auth')
+@ApiBearerAuth()
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
+  @ApiBody({ type: LoginUserDto })
   async login(@CurrentUser() currentUser: UserWithOutPassword) {
     return this.authService.login(currentUser);
   }
@@ -41,6 +46,9 @@ export class AuthController {
   }
 
   @Post('sign-up/:token')
+  @ApiParam({
+    name: 'token',
+  })
   async submitSignUpUser(@Param('token') token: string) {
     return this.authService.submitCreateNewUser(token);
   }

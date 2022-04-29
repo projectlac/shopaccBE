@@ -99,17 +99,17 @@ export class PostService {
   }
 
   async getAll(queryPost: QueryPostDto): Promise<Post[]> {
-    try {
-      const { offset = 0, limit = POST_CONFIG.LIMIT } = queryPost;
-      return this.postRepository.find({
+    const { offset = 0, limit = POST_CONFIG.LIMIT } = queryPost;
+    return this.postRepository
+      .find({
         skip: offset,
         take: limit,
         relations: [POST_RELATION.TAG],
+      })
+      .catch((err) => {
+        console.log(err);
+        throw err;
       });
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
   }
 
   async getAllByTag(queryPostTag: QueryPostTagDto): Promise<Post[]> {

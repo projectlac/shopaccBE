@@ -34,7 +34,7 @@ export const MULTER_CONFIG = {
   CONFIG: {
     storage: diskStorage({
       destination: './uploads',
-      filename: (req, file, cb) => {
+      filename: (_req, file, cb) => {
         // Generating a 32 random chars long string
         const randomName = uuid();
         //Calling the callback passing the random name generated with the original extension name
@@ -59,6 +59,5 @@ export const ROLE_CONTEXT = 'roles';
 
 export const POST_CONFIG = {
   LENGTH: { MIN: 8 },
-  LIMIT:10
+  LIMIT: 10,
 };
-

@@ -1,9 +1,10 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { Get } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { CreateUserDto } from '../dto';
 import { AuthService } from '../service';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('hide-auth')
+@ApiTags('hide-auth')
 export class HideAuthController {
   constructor(private authService: AuthService) {}
 

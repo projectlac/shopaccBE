@@ -1,9 +1,11 @@
-import { POST_CONFIG } from '@/core';
-import { IsNotEmpty, Length, MinLength } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty } from 'class-validator';
 
 export class CreatePostDto {
+  @ApiProperty()
   @IsNotEmpty()
   title: string;
+  @ApiProperty()
   @IsNotEmpty()
   content: string;
   tags: string;

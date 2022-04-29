@@ -1,4 +1,5 @@
-import { MULTER_CONFIG } from '@/core';
+import { DriverService } from '@/driver';
+import { MailerService } from '@/mailer';
 import {
   Controller,
   Get,
@@ -7,12 +8,10 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { AppService } from './app.service';
-import { DriverService } from '@/driver';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { v4 as uuid } from 'uuid';
-import { MailerService } from '@/mailer';
+import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
@@ -31,7 +30,7 @@ export class AppController {
     FileInterceptor('file', {
       storage: diskStorage({
         destination: './uploads',
-        filename: (req, file, cb) => {
+        filename: (_req, file, cb) => {
           const randomName = uuid();
           cb(null, `${randomName}${extname(file.originalname)}`);
         },
@@ -44,9 +43,14 @@ export class AppController {
 
   @Post('send-mail')
   sendMail() {
-    return this.mailerService.sendWelcomeMail(
+    // return this.mailerService.sendWelcomeMail(
+    //   'lhongquan.1998@gmail.com',
+    //   'Quill',
+    // );
+    return this.mailerService.sendResetPasswordMail(
       'lhongquan.1998@gmail.com',
-      'Quill',
+      'ASDASDASDAS',
+      'username',
     );
   }
 }

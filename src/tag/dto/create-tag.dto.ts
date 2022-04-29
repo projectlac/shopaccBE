@@ -1,8 +1,11 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty } from "class-validator";
 
 export class CreateTagDto{
-    @IsNotEmpty({message:'Title cannot be empty'})
+  @ApiProperty()
+  @IsNotEmpty({message:'Title cannot be empty'})
     title: string
-    @IsNotEmpty({message:'Content must be fill'})
+  @ApiProperty()
+  @IsNotEmpty({message:'Content must be fill'})
     content:string
 }

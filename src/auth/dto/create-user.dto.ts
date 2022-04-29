@@ -1,21 +1,34 @@
 import { USER_ROLE } from '@/entity';
-import { IsEmail, IsNotEmpty, IsOptional } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsEmail, IsNotEmpty } from 'class-validator';
 
 export class CreateUserDto {
+  @ApiProperty()
   @IsNotEmpty()
   username: string;
 
   @IsNotEmpty()
+  @ApiProperty()
   password: string;
 
   @IsNotEmpty()
   @IsEmail()
+  @ApiProperty()
   email: string;
 }
 
-export class UpdateUserRoleDto{
+export class UpdateUserRoleDto {
   @IsNotEmpty()
-  username:string
+  @ApiProperty()
+  username: string;
+  @ApiProperty()
   @IsNotEmpty()
-  role: USER_ROLE
+  role: USER_ROLE;
+}
+
+export class LoginUserDto {
+  @ApiProperty()
+  username: string;
+  @ApiProperty()
+  password: string;
 }

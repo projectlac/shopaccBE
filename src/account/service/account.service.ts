@@ -2,9 +2,7 @@ import { ACCOUNT_MESSAGE, POST_CONFIG } from '@/core';
 import { DriverService } from '@/driver';
 import { Account, ACCOUNT_RELATION, User } from '@/entity';
 import { AccountRepository, DriverRepository } from '@/repository';
-import { HttpStatus } from '@nestjs/common';
-import { Injectable, HttpException } from '@nestjs/common';
-import { Like } from 'typeorm';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { CreateAccountDto, QueryAccountDto, UpdateAccountDto } from '../dto';
 
 @Injectable()
@@ -58,6 +56,7 @@ export class AccountService {
           account[property] = value;
         } else {
           account[property] = JSON.stringify(value);
+          account[`${property}Count`] = value.Length;
         }
       }
     }
@@ -89,5 +88,16 @@ export class AccountService {
       });
     }
     return findWeaponQuery.offset(offset).limit(limit).getMany();
+  }
+
+  async removeAccount(id: string) {
+    const account = await this.accountRepository.findOne({ id });
+    if (!id)
+      throw new HttpException(ACCOUNT_MESSAGE.NOT_FOUND, HttpStatus.NOT_FOUND);
+    return Promise.all([
+      this.driverService.deleteFile(account.driver.driverId),
+      this.accountRepository.delete(account),
+      this.driverRepository.delete({ id: account.driver.id }),
+    ]);
   }
 }
