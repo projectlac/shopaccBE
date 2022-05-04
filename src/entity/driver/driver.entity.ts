@@ -19,4 +19,10 @@ export class Driver extends BaseColumn {
 
   @Column()
   webViewLink: string;
+
+  @Column({ default: false, nullable: true })
+  isBanner: boolean;
+
+  @Column({ default: 0, nullable: true })
+  order: number;
 }

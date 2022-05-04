@@ -1,11 +1,11 @@
-import { DriverModule } from '@/driver';
+import { CloudinaryModule } from '@/cloudinary';
 import { RepositoryModule } from '@/repository';
 import { Module } from '@nestjs/common';
 import { PostController, PostGetController } from './controller';
 import { PostService } from './service';
 
 @Module({
-  imports: [RepositoryModule, DriverModule],
+  imports: [RepositoryModule, CloudinaryModule],
   providers: [PostService],
   controllers: [PostController, PostGetController],
 })

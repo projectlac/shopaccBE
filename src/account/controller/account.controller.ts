@@ -1,23 +1,24 @@
 import { CurrentUser, JwtAuthGuard, Roles, RolesGuard } from '@/auth';
-import { User, USER_ROLE } from '@/entity';
+import { MOD_ADMIN_ROLE } from '@/core';
+import { User } from '@/entity';
 import {
   Body,
   Controller,
+  Delete,
   Param,
   Patch,
   Post,
   UploadedFile,
   UseGuards,
   UseInterceptors,
-  Delete,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { v4 as uuid } from 'uuid';
 import { CreateAccountDto, UpdateAccountDto } from '../dto';
 import { AccountService } from '../service';
-import { ApiTags, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 @Controller('account')
 @ApiTags('account')
 @ApiBearerAuth()
@@ -69,7 +70,7 @@ export class AccountController {
   }
 
   @Delete(':id')
-  @Roles(USER_ROLE.ADMIN, USER_ROLE.MOD)
+  @Roles(...MOD_ADMIN_ROLE)
   async deleteAccount(@Param('id') id: string) {
     return this.accountService.removeAccount(id);
   }

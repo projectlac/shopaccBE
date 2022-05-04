@@ -1,5 +1,4 @@
 import { JwtAuthGuard, Roles, RolesGuard } from '@/auth';
-import { USER_ROLE } from '@/entity';
 import {
   Body,
   Controller,
@@ -12,12 +11,13 @@ import {
 import { CreateTagDto, UpdateTagDto } from './dto';
 import { TagService } from './tag.service';
 import { ApiTags, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
+import { MOD_ADMIN_ROLE } from '@/core';
 
 @Controller('tag')
 @ApiTags('tag')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Roles(USER_ROLE.ADMIN, USER_ROLE.MOD)
+@Roles(...MOD_ADMIN_ROLE)
 export class TagController {
   constructor(private tagService: TagService) {}
 

@@ -7,13 +7,14 @@ import {
   OneToOne,
 } from 'typeorm';
 import { BaseColumn } from '../base';
+import { Cloundinary } from '../cloudinary';
 import { Driver } from '../driver';
 import { User } from '../user';
 
 export const ACCOUNT_TABLE_NAME = 'account';
 
 export enum ACCOUNT_RELATION {
-  DRIVER = 'driver',
+  CLOUNDINARY = 'cloundinary',
   USER = 'user',
 }
 
@@ -41,7 +42,7 @@ export class Account extends BaseColumn {
   @ManyToOne(() => User, (user) => user.accounts)
   user: User;
 
-  @OneToOne(() => Driver, { nullable: true })
+  @OneToOne(() => Cloundinary, { nullable: true })
   @JoinColumn()
-  driver: Driver;
+  cloundinary: Cloundinary;
 }

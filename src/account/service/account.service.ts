@@ -1,5 +1,5 @@
+import { CloundinaryService } from '@/cloudinary';
 import { ACCOUNT_MESSAGE, POST_CONFIG } from '@/core';
-import { DriverService } from '@/driver';
 import { Account, ACCOUNT_RELATION, User } from '@/entity';
 import { AccountRepository, DriverRepository } from '@/repository';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
@@ -9,8 +9,7 @@ import { CreateAccountDto, QueryAccountDto, UpdateAccountDto } from '../dto';
 export class AccountService {
   constructor(
     private accountRepository: AccountRepository,
-    private driverService: DriverService,
-    private driverRepository: DriverRepository,
+    private cloundinaryService: CloundinaryService,
   ) {}
 
   async createAccount(
@@ -19,7 +18,7 @@ export class AccountService {
     file: Express.Multer.File,
   ): Promise<Account> {
     const { ar, char, weapon } = createAccountDto;
-    const driver = await this.driverService.uploadFile(file);
+    const cloundinary = await this.cloundinaryService.uploadFile(file);
     const charCount = char.length;
     const weaponCount = weapon.length;
     const charString = JSON.stringify(char);
@@ -31,7 +30,7 @@ export class AccountService {
       charCount,
       weaponCount,
       user,
-      driver,
+      cloundinary,
     });
     return this.accountRepository.save(newAccount);
   }
@@ -42,7 +41,7 @@ export class AccountService {
     file?: Express.Multer.File,
   ): Promise<Account> {
     const account = await this.accountRepository.findOne({
-      relations: [ACCOUNT_RELATION.DRIVER],
+      relations: [ACCOUNT_RELATION.CLOUNDINARY],
       where: {
         id,
       },
@@ -61,13 +60,12 @@ export class AccountService {
       }
     }
     if (file) {
-      const oldDriverId = account.driver.driverId;
-      const driver = await this.driverService.uploadFile(file);
-      account.driver = driver;
+      const oldCloundinary = account.cloundinary.public_id;
+      const cloundinary = await this.cloundinaryService.uploadFile(file);
+      account.cloundinary = cloundinary;
       await Promise.all([
         this.accountRepository.save(account),
-        this.driverRepository.delete({ driverId: oldDriverId }),
-        this.driverService.deleteFile(oldDriverId),
+        this.cloundinaryService.deleteFile(oldCloundinary),
       ]);
       return this.accountRepository.findOne({ id });
     }
@@ -95,9 +93,8 @@ export class AccountService {
     if (!id)
       throw new HttpException(ACCOUNT_MESSAGE.NOT_FOUND, HttpStatus.NOT_FOUND);
     return Promise.all([
-      this.driverService.deleteFile(account.driver.driverId),
+      this.cloundinaryService.deleteFile(account.cloundinary.public_id),
       this.accountRepository.delete(account),
-      this.driverRepository.delete({ id: account.driver.id }),
     ]);
   }
 }

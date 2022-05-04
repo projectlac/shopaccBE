@@ -1,7 +1,7 @@
-import { DriverService } from '@/driver';
 import { MailerService } from '@/mailer';
 import {
   Controller,
+  Delete,
   Get,
   Post,
   UploadedFile,
@@ -12,13 +12,15 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { v4 as uuid } from 'uuid';
 import { AppService } from './app.service';
+import { CloundinaryService } from '@/cloudinary';
+import { Param } from '@nestjs/common';
 
 @Controller()
 export class AppController {
   constructor(
     private readonly appService: AppService,
-    private driverService: DriverService,
     private mailerService: MailerService,
+    private cloundinaryService: CloundinaryService,
   ) {}
 
   @Get()
@@ -38,7 +40,13 @@ export class AppController {
     }),
   )
   uploadFile(@UploadedFile() file: Express.Multer.File) {
-    return this.driverService.uploadFile(file);
+    // return this.driverService.uploadFile(file);
+    return this.cloundinaryService.uploadFile(file);
+  }
+
+  @Delete(':publicId')
+  deleteFile(@Param('publicId') publicId: string) {
+    return this.cloundinaryService.deleteFile(publicId);
   }
 
   @Post('send-mail')

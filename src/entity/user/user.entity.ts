@@ -47,4 +47,7 @@ export class User extends BaseColumn {
 
   @OneToMany(() => Account, (account) => account.user, { nullable: true })
   accounts: Account[];
+
+  @Column({ nullable: true })
+  avatar: number;
 }

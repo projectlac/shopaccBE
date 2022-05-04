@@ -1,7 +1,7 @@
+import { CloundinaryService } from '@/cloudinary';
 import { POST_CONFIG, POST_MESSAGE } from '@/core';
-import { DriverService } from '@/driver';
 import { Post, POST_RELATION, User } from '@/entity';
-import { DriverRepository, PostRepository, TagRepository } from '@/repository';
+import { PostRepository, TagRepository } from '@/repository';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { In } from 'typeorm';
 import {
@@ -15,8 +15,7 @@ import {
 export class PostService {
   constructor(
     private postRepository: PostRepository,
-    private driverService: DriverService,
-    private driverRepository: DriverRepository,
+    private cloundinaryService: CloundinaryService,
     private tagRepository: TagRepository,
   ) {}
 
@@ -26,21 +25,14 @@ export class PostService {
     file?: Express.Multer.File,
   ): Promise<Post> {
     const { title, content, tags } = createPostDto;
-    const image = file ? await this.driverService.uploadFile(file) : null;
-    const listTag =
-      tags && tags.length > 0
-        ? await this.tagRepository.find({
-            where: {
-              title: In(tags.split(',')),
-            },
-          })
-        : [];
+    const cloundinary = file
+      ? await this.cloundinaryService.uploadFile(file)
+      : null;
     const newPost = this.postRepository.create({
       title,
       content,
       user,
-      tags: listTag,
-      image,
+      cloundinary,
     });
     return this.postRepository.save(newPost);
   }
@@ -57,8 +49,7 @@ export class PostService {
         throw new HttpException(POST_MESSAGE.NOT_FOUND, HttpStatus.NOT_FOUND);
       return Promise.all([
         this.postRepository.delete(id),
-        this.driverRepository.delete(post.image.id),
-        this.driverService.deleteFile(post.image.driverId),
+        this.cloundinaryService.deleteFile(post.cloundinary.public_id),
       ]);
     } catch (error) {
       console.log(error);
@@ -79,16 +70,15 @@ export class PostService {
       if (!post)
         throw new HttpException(POST_MESSAGE.NOT_FOUND, HttpStatus.NOT_FOUND);
       if (file) {
-        const image = await this.driverService.uploadFile(file);
-        const { id: imageId, driverId } = post.image;
+        const image = await this.cloundinaryService.uploadFile(file);
+        const { public_id } = post.cloundinary;
         return Promise.all([
           this.postRepository.save({
             ...post,
             image,
             ...updatePostDto,
           }),
-          this.driverRepository.delete(imageId),
-          this.driverService.deleteFile(driverId),
+          this.cloundinaryService.deleteFile(public_id),
         ]);
       }
       return this.postRepository.update({ id }, { ...updatePostDto });

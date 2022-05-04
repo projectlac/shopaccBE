@@ -9,6 +9,7 @@ import {
   OneToOne,
 } from 'typeorm';
 import { BaseColumn } from '../base';
+import { Cloundinary } from '../cloudinary';
 import { Driver } from '../driver';
 import { Tag } from '../tag';
 import { User } from '../user';
@@ -30,9 +31,9 @@ export class Post extends BaseColumn {
   @Column({ type: 'text' })
   content: string;
 
-  @OneToOne(() => Driver, { nullable: true })
+  @OneToOne(() => Cloundinary, { nullable: true })
   @JoinColumn()
-  image: Driver;
+  cloundinary: Cloundinary;
 
   @ManyToOne(() => User, (user) => user.posts, { nullable: true })
   user: User;
