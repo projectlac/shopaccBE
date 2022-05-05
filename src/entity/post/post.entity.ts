@@ -5,12 +5,10 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
-  OneToMany,
   OneToOne,
 } from 'typeorm';
 import { BaseColumn } from '../base';
 import { Cloundinary } from '../cloudinary';
-import { Driver } from '../driver';
 import { Tag } from '../tag';
 import { User } from '../user';
 

@@ -26,7 +26,7 @@ export class CloundinaryController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(...MOD_ADMIN_ROLE)
   @UseInterceptors(
-    FilesInterceptor('files', 20, {
+    FilesInterceptor('files', 3, {
       storage: diskStorage({
         destination: './uploads',
         filename: (_req, file, cb) => {

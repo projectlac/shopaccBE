@@ -78,3 +78,8 @@ export const CLOUDINARY_CONFIG = {
   API_ENV:
     'CLOUDINARY_URL=cloudinary://181389484819227:X0ps-nMxPbMte_X8EfMI_wG6gCY@shoppacc',
 };
+
+export const DEFAULT_CONFIG = {
+  LIMIT: 10,
+  OFFSET: 0,
+};

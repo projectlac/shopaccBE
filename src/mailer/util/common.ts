@@ -1,4 +1,4 @@
-import { MAILER_CONFIG } from '@/core';
+import { EXPIRES_IN_MINUTE, MAILER_CONFIG } from '@/core';
 import {
   MailContext,
   MailerOptions,
@@ -20,7 +20,7 @@ export const getMailOptions = (
   };
 };
 
-export const getExpiredTime = (expiresIn: number): Date => {
+export const getExpiredTime = (expiresIn: EXPIRES_IN_MINUTE): Date => {
   const date = new Date();
   return new Date(date.getTime() + expiresIn * 60000);
 };

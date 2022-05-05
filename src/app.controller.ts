@@ -6,6 +6,7 @@ import {
   Post,
   UploadedFile,
   UseInterceptors,
+  Param,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -13,7 +14,6 @@ import { extname } from 'path';
 import { v4 as uuid } from 'uuid';
 import { AppService } from './app.service';
 import { CloundinaryService } from '@/cloudinary';
-import { Param } from '@nestjs/common';
 
 @Controller()
 export class AppController {

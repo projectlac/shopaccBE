@@ -1,4 +1,4 @@
-import { UserWithOutPassword } from '@/entity';
+import { UserWithOutPassword, USER_ROLE } from '@/entity';
 import {
   Body,
   Controller,
@@ -70,7 +70,7 @@ export class AuthController {
     return this.authService.forgetPassword(forgetPasswordDto);
   }
 
-  @Patch('reset-password/:token')
+  @Patch('forget-password/:token')
   resetPassword(@Param('token') token: string) {
     return this.authService.verifyResetPassword(token);
   }

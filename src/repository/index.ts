@@ -5,3 +5,4 @@ export * from './post';
 export * from './tag';
 export * from './account';
 export * from './cloudinary';
+export * from './audit';

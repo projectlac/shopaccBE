@@ -1,4 +1,4 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class NewPasswordDto {
   @ApiProperty()
@@ -15,10 +15,4 @@ export class ForgetPasswordDto extends NewPasswordDto {
 export class ChangePasswordDto extends NewPasswordDto {
   @ApiProperty()
   oldPassword: string;
-}
-
-export interface ResetPasswordPayload {
-  username: string;
-  password: string;
-  expiredTime: Date;
 }

@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { CreateUserDto } from '../dto';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { CreateUserDto, QueryUserDto } from '../dto';
 import { AuthService } from '../service';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -16,5 +16,10 @@ export class HideAuthController {
   @Get()
   async getAllUser() {
     return this.authService.getAllUser();
+  }
+
+  @Get('list-user')
+  async getAllUserList(@Query() queryUserDto: QueryUserDto) {
+    return this.authService.getAllUserList(queryUserDto);
   }
 }

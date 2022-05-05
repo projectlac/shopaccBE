@@ -3,6 +3,7 @@ import {
   checkIsMatchPassword,
   EXPIRES_IN_MINUTE,
   hashedPassword,
+  DEFAULT_CONFIG,
 } from '@/core/';
 import {
   PayloadTokenUser,
@@ -10,7 +11,7 @@ import {
   UserWithOutPassword,
   USER_ROLE,
 } from '@/entity';
-import { MailerService } from '@/mailer';
+import { getExpiredTime, MailerService } from '@/mailer';
 import { UserRepository } from '@/repository';
 import {
   ConflictException,
@@ -26,11 +27,11 @@ import {
   ChangePasswordDto,
   CreateUserDto,
   ForgetPasswordDto,
-  ResetPasswordPayload,
+  QueryUserDto,
   UpdateUserRoleDto,
 } from '../dto';
-import { getExpiredTime } from './../../mailer/util/common';
-import { compareTimeExpired } from './../util/common';
+import { SubmitUserPayload, ResetPasswordPayload } from '../interface';
+import { isTokenExpired } from '../util';
 
 @Injectable()
 export class AuthService {
@@ -40,10 +41,7 @@ export class AuthService {
     private mailerService: MailerService,
   ) {}
 
-  async validateUser(
-    username: string,
-    password: string,
-  ): Promise<User | null> {
+  async validateUser(username: string, password: string): Promise<User | null> {
     const user = await this.userRepository.findOne({ username });
     if (!user) throw new NotFoundException(AUTH_MESSAGE.USER.NOT_FOUND);
     const isMatch = await checkIsMatchPassword(password, user.password);
@@ -70,12 +68,20 @@ export class AuthService {
       ...createUserDto,
       password,
     };
-    const token = this.jwtService.sign(rawNewUser);
+
+    const expiredTime = getExpiredTime(EXPIRES_IN_MINUTE.THIRTY_MINUTE);
+    const token = this.jwtService.sign({ rawNewUser, expiredTime });
     return this.mailerService.sendSubmitMail(email, username, token);
   }
 
   async submitCreateNewUser(token: string): Promise<string> {
-    const rawNewUser = jwtDecode<User>(token);
+    const { rawNewUser, expiredTime } = jwtDecode<SubmitUserPayload>(token);
+    if (isTokenExpired(expiredTime)) {
+      throw new HttpException(
+        AUTH_MESSAGE.TOKEN.EXPIRED,
+        HttpStatus.REQUEST_TIMEOUT,
+      );
+    }
     const checkExistUser = await this.userRepository.findOne({
       username: rawNewUser.username,
     });
@@ -132,7 +138,7 @@ export class AuthService {
   async verifyResetPassword(tokenResetPassword: string) {
     const payload: ResetPasswordPayload = jwt_decode(tokenResetPassword);
     const { username, password, expiredTime } = payload;
-    if (!compareTimeExpired(expiredTime)) {
+    if (isTokenExpired(expiredTime)) {
       throw new HttpException(
         AUTH_MESSAGE.TOKEN.EXPIRED,
         HttpStatus.REQUEST_TIMEOUT,
@@ -167,5 +173,17 @@ export class AuthService {
 
   async getAllUser(): Promise<User[]> {
     return this.userRepository.find();
+  }
+
+  async getAllUserList(queryUserDto: QueryUserDto): Promise<User[]> {
+    const { offset = DEFAULT_CONFIG.OFFSET, limit = DEFAULT_CONFIG.OFFSET } =
+      queryUserDto;
+    return this.userRepository.find({
+      take: limit,
+      skip: offset,
+      where: {
+        role: USER_ROLE.USER,
+      },
+    });
   }
 }

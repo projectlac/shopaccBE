@@ -33,4 +33,5 @@ export const ACCOUNT_MESSAGE = {
 
 export enum EXPIRES_IN_MINUTE {
   FIVE_MINUTE = 5,
+  THIRTY_MINUTE = 30,
 }

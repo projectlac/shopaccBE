@@ -17,7 +17,7 @@ import { MailerModule } from '@/mailer';
     }),
     MailerModule,
   ],
-  controllers: [AuthController,HideAuthController],
+  controllers: [AuthController, HideAuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy],
   exports: [AuthService],
 })
