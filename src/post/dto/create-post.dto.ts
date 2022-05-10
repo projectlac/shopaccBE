@@ -7,6 +7,9 @@ export class CreatePostDto {
   title: string;
   @ApiProperty()
   @IsNotEmpty()
+  description: string;
+  @ApiProperty()
+  @IsNotEmpty()
   content: string;
   tags: string;
 }

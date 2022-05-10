@@ -29,6 +29,9 @@ export class Post extends BaseColumn {
   @Column({ type: 'text' })
   content: string;
 
+  @Column({ type: 'text', nullable:true })
+  description: string;
+
   @OneToOne(() => Cloundinary, { nullable: true })
   @JoinColumn()
   cloundinary: Cloundinary;

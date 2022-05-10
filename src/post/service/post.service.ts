@@ -24,7 +24,7 @@ export class PostService {
     user: User,
     file?: Express.Multer.File,
   ): Promise<Post> {
-    const { title, content, tags } = createPostDto;
+    const { title, content, tags,description } = createPostDto;
     const cloundinary = file
       ? await this.cloundinaryService.uploadFile(file)
       : null;
@@ -32,6 +32,7 @@ export class PostService {
       title,
       content,
       user,
+      description,
       cloundinary,
     });
     return this.postRepository.save(newPost);
