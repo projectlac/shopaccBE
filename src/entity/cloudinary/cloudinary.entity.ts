@@ -7,39 +7,44 @@ export const CLOUNDINARY_TABLE_NAME = 'cloundinary';
 export class Cloundinary {
   @PrimaryColumn()
   public_id: string;
-  @Column()
+    @Column({nullable:true})
   asset_id: string;
-  @Column()
+    @Column({nullable:true})
   version: number;
-  @Column()
+    @Column({nullable:true})
   version_id: string;
-  @Column()
+    @Column({nullable:true})
   signature: string;
-  @Column()
+    @Column({nullable:true})
   width: number;
-  @Column()
+    @Column({nullable:true})
   height: number;
-  @Column()
+    @Column({nullable:true})
   format: string;
   @Column()
   resource_type: string;
-  @Column()
+  @Column({nullable:true})
+
   created_at: Date;
-  @Column()
+  @Column({nullable:true})
+
   bytes: number;
-  @Column()
+  @Column({nullable:true})
+
   type: string;
-  @Column()
+  @Column({nullable:true})
+
   etag: string;
   @Column({ type: 'text', default: '' })
   url: string;
   @Column({ type: 'text', default: '' })
   secure_url: string;
-  @Column()
+  @Column({nullable:true})
+
   original_filename: string;
-  @Column()
+  @Column({nullable:true})
   original_extension: string;
-  @Column()
+  @Column({nullable:true})
   api_key: string;
   @Column({ default: false, nullable: true })
   isBanner: boolean;
