@@ -64,6 +64,7 @@ export class AccountService {
       const oldCloundinary = account.cloundinary.public_id;
       const cloundinary = await this.cloundinaryService.uploadFile(file);
       account.cloundinary = cloundinary;
+      account.imageUrl = cloundinary.url || cloundinary.secure_url
       await Promise.all([
         this.accountRepository.save(account),
         this.cloundinaryService.deleteFile(oldCloundinary),

@@ -79,6 +79,7 @@ export class PostService {
             ...post,
             image,
             ...updatePostDto,
+            imageUrl:image.url || image.secure_url
           }),
           this.cloundinaryService.deleteFile(public_id),
         ]);
