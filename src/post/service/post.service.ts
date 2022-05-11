@@ -97,7 +97,7 @@ export class PostService {
       .find({
         skip: offset,
         take: limit,
-        relations: [POST_RELATION.TAG],
+        // relations: [POST_RELATION.TAG],
         select:['content','updatedAt','description','imageUrl']
       })
       .catch((err) => {
