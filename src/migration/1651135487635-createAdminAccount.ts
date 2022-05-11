@@ -22,7 +22,7 @@ export class createAdminAccount1651135487635 implements MigrationInterface {
           password,
           role: USER_ROLE.ADMIN,
           confirmedEmail: true,
-          //   email: 'lhongquan.1998@gmail.com',
+            email: 'dft1711198@gmail.com',
         },
         {
           username: 'admin',
