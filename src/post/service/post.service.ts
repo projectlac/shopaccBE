@@ -34,6 +34,7 @@ export class PostService {
       user,
       description,
       cloundinary,
+      imageUrl:cloundinary.url || cloundinary.secure_url
     });
     return this.postRepository.save(newPost);
   }
@@ -44,7 +45,7 @@ export class PostService {
         where: {
           id,
         },
-        relations: [POST_RELATION.IMAGE],
+        relations: [POST_RELATION.CLOUNDINARY],
       });
       if (!post)
         throw new HttpException(POST_MESSAGE.NOT_FOUND, HttpStatus.NOT_FOUND);
@@ -66,7 +67,7 @@ export class PostService {
     try {
       const post = await this.postRepository.findOne({
         where: { id },
-        relations: [POST_RELATION.IMAGE],
+        relations: [POST_RELATION.CLOUNDINARY],
       });
       if (!post)
         throw new HttpException(POST_MESSAGE.NOT_FOUND, HttpStatus.NOT_FOUND);
@@ -96,6 +97,7 @@ export class PostService {
         skip: offset,
         take: limit,
         relations: [POST_RELATION.TAG],
+        select:['content','updatedAt','description','imageUrl']
       })
       .catch((err) => {
         console.log(err);

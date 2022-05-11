@@ -31,6 +31,7 @@ export class AccountService {
       weaponCount,
       user,
       cloundinary,
+      imageUrl: cloundinary.url || cloundinary.secure_url
     });
     return this.accountRepository.save(newAccount);
   }

@@ -13,7 +13,7 @@ import { Tag } from '../tag';
 import { User } from '../user';
 
 export enum POST_RELATION {
-  IMAGE = 'image',
+  CLOUNDINARY = 'cloundinary',
   USER = 'user',
   TAG = 'tags',
   POST_TAGS_TAG = 'post_tags_tag',
@@ -31,7 +31,8 @@ export class Post extends BaseColumn {
 
   @Column({ type: 'text', nullable:true })
   description: string;
-
+  @Column({nullable:true})
+  imageUrl:string
   @OneToOne(() => Cloundinary, { nullable: true })
   @JoinColumn()
   cloundinary: Cloundinary;

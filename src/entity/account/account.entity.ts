@@ -45,4 +45,7 @@ export class Account extends BaseColumn {
   @OneToOne(() => Cloundinary, { nullable: true })
   @JoinColumn()
   cloundinary: Cloundinary;
+
+  @Column({nullable:true})
+  imageUrl:string
 }
