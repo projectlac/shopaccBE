@@ -1,8 +1,7 @@
 import { CurrentUser, JwtAuthGuard, Roles, RolesGuard } from '@/auth';
 import { MOD_ADMIN_ROLE } from '@/core';
-import { User, UserWithOutPassword } from '@/entity';
-import { Query } from '@nestjs/common';
-import { Controller, UseGuards, Post, Body, Get } from '@nestjs/common';
+import { User } from '@/entity';
+import { Controller, UseGuards, Post, Body, Get, Query } from '@nestjs/common';
 import { CreateAuditByAdminDto, CreateAuditDto, QueryAuditDto } from '../dto';
 import { AuditService } from '../service';
 

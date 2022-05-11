@@ -11,6 +11,7 @@ import { TagModule } from '@/tag';
 import { MulterModule } from '@nestjs/platform-express';
 import { CloudinaryModule } from '@/cloudinary';
 import { AuditModule } from '@/audit';
+import { HistoryModule } from '@/history';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { AuditModule } from '@/audit';
     MulterModule,
     CloudinaryModule,
     AuditModule,
+    HistoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

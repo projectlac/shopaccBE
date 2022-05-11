@@ -6,3 +6,5 @@ export * from './tag';
 export * from './account';
 export * from './cloudinary';
 export * from './audit';
+export * from './audit-information';
+export * from './history';

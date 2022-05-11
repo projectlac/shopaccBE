@@ -1,6 +1,10 @@
 import { AUTH_MESSAGE, DEFAULT_CONFIG } from '@/core';
 import { Audit, User, UserWithOutPassword } from '@/entity';
-import { AuditRepository, UserRepository } from '@/repository';
+import {
+  AuditInformationRepository,
+  AuditRepository,
+  UserRepository,
+} from '@/repository';
 import { HttpStatus, Injectable, HttpException } from '@nestjs/common';
 import { CreateAuditByAdminDto, CreateAuditDto, QueryAuditDto } from '../dto';
 
@@ -9,13 +13,24 @@ export class AuditService {
   constructor(
     private auditRepository: AuditRepository,
     private userRepository: UserRepository,
+    private auditInformationRepository: AuditInformationRepository,
   ) {}
 
   async createNewAudit(
     user: User,
     createAuditDto: CreateAuditDto,
   ): Promise<Audit> {
-    return this.auditRepository.save({ user, ...createAuditDto });
+    const { auditInformation, ...newAudit } = createAuditDto;
+    const auditInformations =
+      await this.auditInformationRepository.createAuditInformations(
+        auditInformation,
+      );
+    const audit = this.auditRepository.create({
+      user,
+      auditInformations,
+      ...newAudit,
+    });
+    return this.auditRepository.save(audit);
   }
 
   async createAuditByAdmin(
