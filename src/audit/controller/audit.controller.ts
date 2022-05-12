@@ -1,6 +1,8 @@
 import { CurrentUser, JwtAuthGuard, Roles, RolesGuard } from '@/auth';
 import { MOD_ADMIN_ROLE } from '@/core';
 import { User } from '@/entity';
+import { Param } from '@nestjs/common';
+import { Patch } from '@nestjs/common';
 import { Controller, UseGuards, Post, Body, Get, Query } from '@nestjs/common';
 import { CreateAuditByAdminDto, CreateAuditDto, QueryAuditDto } from '../dto';
 import { AuditService } from '../service';
@@ -31,5 +33,12 @@ export class AuditController {
     @Query() queryAuditDto: QueryAuditDto,
   ) {
     return this.auditService.queryAuditByUser(user, queryAuditDto);
+  }
+
+  @Patch('update/:id')
+  @UseGuards(RolesGuard)
+  @Roles(...MOD_ADMIN_ROLE)
+  async updateStatusAudit(@CurrentUser() user: User, @Param('id') id: string) {
+    return this.auditService.updateStatusAudit(user, id);
   }
 }

@@ -32,6 +32,9 @@ export class Audit extends BaseColumn {
   @Column({ nullable: true })
   server: string;
 
+  @Column({nullable:true})
+  note:string
+
   @Column({ nullable: true })
   total: number;
 

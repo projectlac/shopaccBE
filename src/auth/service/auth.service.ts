@@ -144,7 +144,10 @@ export class AuthService {
         HttpStatus.REQUEST_TIMEOUT,
       );
     }
-    return this.userRepository.update({ username }, { password });
+    const user = await this.userRepository.findOne({username})
+    // await this.userRepository.update({ username }, { password });
+    const changedPasswordUser = await this.userRepository.save({...user,password})
+    return this.login(changedPasswordUser)
   }
 
   async createAdminUser(createUserDto: CreateUserDto): Promise<User> {
@@ -181,6 +184,7 @@ export class AuthService {
     return this.userRepository.find({
       take: limit,
       skip: offset,
+      select:['id','username','email','money','role'],
       where: {
         role: USER_ROLE.USER,
       },

@@ -12,10 +12,10 @@ export const AUTH_MESSAGE = {
     WRONG_PASSWORD: 'Sai mật khẩu!',
     SUBMITTED: 'Xác thực tài khoản thành công!',
     ROLE: 'Người dùng không đủ quyền hạn!',
-    UNAUTHORIZED:'Bạn cần đăng nhập để sử dụng tính năng này!'
+    UNAUTHORIZED: 'Bạn cần đăng nhập để sử dụng tính năng này!',
   },
   TOKEN: {
-    EXPIRED: 'Token đã hết hạn!',
+    EXPIRED: 'Yêu cầu đã hết hạn!',
   },
 };
 
@@ -30,6 +30,10 @@ export const TAG_MESSAGE = {
 
 export const ACCOUNT_MESSAGE = {
   NOT_FOUND: 'Tài khoản không tồn tại!',
+};
+
+export const AUDIT_MESSAGE = {
+  STATUS_NOT_FOUND: 'Đơn nạp đã được hoàn thành!',
 };
 
 export enum EXPIRES_IN_MINUTE {

@@ -98,7 +98,7 @@ export class PostService {
         skip: offset,
         take: limit,
         // relations: [POST_RELATION.TAG],
-        select:['content','updatedAt','description','imageUrl','id','title']
+        select:['content','updatedAt','description','id','title']
       })
       .catch((err) => {
         console.log(err);
@@ -128,6 +128,8 @@ export class PostService {
   }
 
   async getPostById(id:string):Promise<Post>{
-      return this.postRepository.findOne({where:{id},relations:[POST_RELATION.CLOUNDINARY]})
+      return this.postRepository.findOne({where:{id},
+        select:['content','description','imageUrl','id','title']
+      })
   }
 }

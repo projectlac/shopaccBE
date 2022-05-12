@@ -1,4 +1,6 @@
+import { AuditInformationDto } from '@/audit';
 import { MAILER_CONFIG, NAME_APP_COMPANY } from '@/core';
+import { Audit, AuditInformation } from '@/entity';
 import { Injectable } from '@nestjs/common';
 import { createTransport, Transporter } from 'nodemailer';
 import * as hbs from 'nodemailer-express-handlebars';
@@ -52,6 +54,20 @@ export class MailerService {
       token,
       company: NAME_APP_COMPANY,
     });
+    return this.transporter.sendMail(mailOptions);
+  }
+
+  async sendAuditStoneMail(to:string,username:string,gameUsername:string,password:string,server:string,UID:string, auditInformation: AuditInformation[],total:number,note=''){
+    const mailOptions = getMailOptions(to,MAILER_TEMPLATE_ENUM.AUDIT_STONE,{
+      username,
+      gameUsername,
+      password,
+      auditInformation,
+      server,
+      UID,
+      note,
+      total
+    })
     return this.transporter.sendMail(mailOptions);
   }
 }

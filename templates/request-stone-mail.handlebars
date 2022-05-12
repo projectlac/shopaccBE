@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Submit User Email</title>
+
+    <style lang>
+        tr,
+        th,
+        td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left
+        }
+
+        .container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 20px
+        }
+
+        .infor {
+            width: 80%;
+        }
+    </style>
+</head>
+
+<body style="background-color: #f4f4f4; margin: 0 !important; padding: 0 !important;">
+    <!-- HIDDEN PREHEADER TEXT -->
+
+    <div class="container">
+        <div class="infor">
+            <p>
+                Có đơn nạp Đá sáng thế từ tài khoản {{username}}
+            </p>
+            <p>
+                vào tài khoản game
+            </p>
+            <p>
+                username : {{gameUsername}}
+            </p>
+            <p>
+                password : {{password}}
+            </p>
+            <p>
+                server : {{server}}
+            </p>
+            <p>
+                UID: {{UID}}
+            </p>
+        </div>
+
+        <div style="display:flex;justify-content:center">
+            <table class="table" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Sản phẩm</th>
+                        <th>Số lượng</th>
+                        <th>Đơn giá</th>
+                        <th>Tổng tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each auditInformation}}
+                    <tr>
+                        <td> sản phẩm: {{this.name}}</td>
+                        <td> số lượng: {{this.quantity}}</td>
+                        <td> đơn giá : {{this.unitPrice}} </td>
+                        <td>
+                            tổng giá : {{this.total}}
+                        </td>
+                    </tr>
+
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;font-size:15px;margin:20px 0 ;">
+            <p>
+                Tổng đơn
+            </p>
+            <b>
+                {{total}}
+            </b>
+        </div>
+
+        <div class="entry">
+            {{#if note}}
+            <p>
+                Ghi chú: {{note}}
+            </p>
+            </h1>
+            {{/if}}
+        </div>
+
+        </ul>
+
+    </div>
+
+</body>
+
+</html>

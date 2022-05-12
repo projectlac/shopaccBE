@@ -1,5 +1,6 @@
-import { AUTH_MESSAGE, DEFAULT_CONFIG } from '@/core';
-import { Audit, User, UserWithOutPassword } from '@/entity';
+import { AUDIT_MESSAGE, AUTH_MESSAGE, DEFAULT_CONFIG } from '@/core';
+import { Audit, AUDIT_STATUS, User, UserWithOutPassword } from '@/entity';
+import { MailerService } from '@/mailer';
 import {
   AuditInformationRepository,
   AuditRepository,
@@ -14,13 +15,14 @@ export class AuditService {
     private auditRepository: AuditRepository,
     private userRepository: UserRepository,
     private auditInformationRepository: AuditInformationRepository,
+    private mailerService: MailerService
   ) {}
 
   async createNewAudit(
     user: User,
     createAuditDto: CreateAuditDto,
   ): Promise<Audit> {
-    const { auditInformation, ...newAudit } = createAuditDto;
+    const { auditInformation,username,password, ...newAudit } = createAuditDto;
     const auditInformations =
       await this.auditInformationRepository.createAuditInformations(
         auditInformation,
@@ -30,7 +32,9 @@ export class AuditService {
       auditInformations,
       ...newAudit,
     });
-    return this.auditRepository.save(audit);
+    const savedAudit = await  this.auditRepository.save(audit);
+    await this.mailerService.sendAuditStoneMail('lhongquan.1998@gmail.com', user.username,username,password,newAudit.server,newAudit.UID,auditInformations,savedAudit.total,newAudit.note)
+    return savedAudit
   }
 
   async createAuditByAdmin(
@@ -59,5 +63,21 @@ export class AuditService {
       skip: offset,
       where: { user },
     });
+  }
+
+  async updateStatusAudit(user: User, id: string) {
+    const audit = await this.auditRepository.findOne({
+      status: AUDIT_STATUS.PENDING,
+      id,
+    });
+    if (!audit)
+      throw new HttpException(
+        AUDIT_MESSAGE.STATUS_NOT_FOUND,
+        HttpStatus.CONFLICT,
+      );
+    return this.auditRepository.update(
+      { id },
+      { status: AUDIT_STATUS.COMPLETED },
+    );
   }
 }
