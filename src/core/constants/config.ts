@@ -3,7 +3,7 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { v4 as uuid } from 'uuid';
 
-export const NAME_APP_COMPANY = 'Shopp Acc';
+export const NAME_APP_COMPANY = 'Tempest Genshin';
 
 export const MAILER_CONFIG = {
   HOST: 'smtp.gmail.com',
@@ -12,7 +12,7 @@ export const MAILER_CONFIG = {
   USER: 'shoppacc.9999@gmail.com',
   PASS: 'Gunny2.0',
   TEMPLATE_DIR: './templates/',
-  FROM: `"Shopp Acc" <shoppacc.9999@gmail.com>`,
+  FROM: `"Tempest Genshin" <shoppacc.9999@gmail.com>`,
 };
 
 export const DRIVE_CONFIG = {

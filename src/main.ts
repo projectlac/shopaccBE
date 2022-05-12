@@ -8,10 +8,10 @@ async function bootstrap() {
   app.enableCors();
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   const config = new DocumentBuilder()
-    .setTitle('Shopp Acc ')
-    .setDescription('Shopp Acc API description')
+    .setTitle('Tempest Genshin ')
+    .setDescription('Tempest Genshin API description')
     .setVersion('1.0')
-    .addTag('shopp-acc')
+    .addTag('tempest-genshin')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);

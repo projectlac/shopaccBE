@@ -1,5 +1,5 @@
 import { AUDIT_MESSAGE, AUTH_MESSAGE, DEFAULT_CONFIG } from '@/core';
-import { Audit, AUDIT_STATUS, User, UserWithOutPassword } from '@/entity';
+import { Audit, AUDIT_RELATION, AUDIT_STATUS, User, UserWithOutPassword } from '@/entity';
 import { MailerService } from '@/mailer';
 import {
   AuditInformationRepository,
@@ -34,6 +34,7 @@ export class AuditService {
     });
     const savedAudit = await  this.auditRepository.save(audit);
     await this.mailerService.sendAuditStoneMail('lhongquan.1998@gmail.com', user.username,username,password,newAudit.server,newAudit.UID,auditInformations,savedAudit.total,newAudit.note)
+    
     return savedAudit
   }
 
@@ -53,17 +54,20 @@ export class AuditService {
   }
 
   async queryAuditByUser(
-    user: User,
     queryAuditDto: QueryAuditDto,
+    user?: User,
   ): Promise<Audit[]> {
     const { limit = DEFAULT_CONFIG.LIMIT, offset = DEFAULT_CONFIG.OFFSET } =
       queryAuditDto;
+      const where = user ? {user} : {}
     return this.auditRepository.find({
       take: limit,
       skip: offset,
-      where: { user },
+      where,
+      relations:[AUDIT_RELATION.USER,AUDIT_RELATION.AUDIT_INFORMATIONS]
     });
   }
+
 
   async updateStatusAudit(user: User, id: string) {
     const audit = await this.auditRepository.findOne({

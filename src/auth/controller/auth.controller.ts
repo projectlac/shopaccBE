@@ -1,4 +1,4 @@
-import { UserWithOutPassword, USER_ROLE } from '@/entity';
+import { User, UserWithOutPassword, USER_ROLE } from '@/entity';
 import {
   Body,
   Controller,
@@ -77,7 +77,7 @@ export class AuthController {
 
   @Patch('update-role')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  updateRoleUser(@Body() updateUserRole: UpdateUserRoleDto) {
-    return this.authService.updateUserRole(updateUserRole);
+  updateRoleUser(@CurrentUser() user: User,@Body() updateUserRole: UpdateUserRoleDto) {
+    return this.authService.updateUserRole(user,updateUserRole);
   }
 }

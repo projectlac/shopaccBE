@@ -6,11 +6,14 @@ import {
   DEFAULT_CONFIG,
 } from '@/core/';
 import {
+  History,
+  HISTORY_TYPE,
   PayloadTokenUser,
   User,
   UserWithOutPassword,
   USER_ROLE,
 } from '@/entity';
+import { HistoryService } from '@/history';
 import { getExpiredTime, MailerService } from '@/mailer';
 import { UserRepository } from '@/repository';
 import {
@@ -39,6 +42,7 @@ export class AuthService {
     private userRepository: UserRepository,
     private jwtService: JwtService,
     private mailerService: MailerService,
+    private historyService:HistoryService
   ) {}
 
   async validateUser(username: string, password: string): Promise<User | null> {
@@ -162,8 +166,9 @@ export class AuthService {
   }
 
   async updateUserRole(
+    user:User,
     updateUserRoleDto: UpdateUserRoleDto,
-  ): Promise<UpdateResult> {
+  ): Promise<[User,History | void]> {
     const { username, role } = updateUserRoleDto;
     const checkUser = await this.userRepository.findOne({ username });
     if (!checkUser)
@@ -171,7 +176,7 @@ export class AuthService {
         AUTH_MESSAGE.USER.NOT_FOUND,
         HttpStatus.NOT_FOUND,
       );
-    return this.userRepository.update({ username }, { role });
+    return Promise.all([this.userRepository.save({...checkUser,role}),this.historyService.createHistory({admin:user.username,username,oldRole:checkUser.role,newRole:role},HISTORY_TYPE.CHANGE_ROLE)]);
   }
 
   async getAllUser(): Promise<User[]> {

@@ -76,7 +76,7 @@ export class AccountService {
 
   async queryAccount(queryAccountDto: QueryAccountDto): Promise<Account[]> {
     const { offset = 0, limit = POST_CONFIG.LIMIT, weapon } = queryAccountDto;
-    let findWeaponQuery = this.accountRepository
+    const findWeaponQuery = this.accountRepository
       .createQueryBuilder('account')
       .leftJoinAndSelect('account.driver', 'driver')
       .leftJoinAndSelect('account.user', 'user');

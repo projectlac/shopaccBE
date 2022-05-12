@@ -4,11 +4,13 @@ import { User } from '@/entity';
 import { Param } from '@nestjs/common';
 import { Patch } from '@nestjs/common';
 import { Controller, UseGuards, Post, Body, Get, Query } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateAuditByAdminDto, CreateAuditDto, QueryAuditDto } from '../dto';
 import { AuditService } from '../service';
 
 @Controller('audit')
-@UseGuards(JwtAuthGuard)
+@ApiTags('audit')
+@UseGuards(JwtAuthGuard,RolesGuard)
 export class AuditController {
   constructor(private auditService: AuditService) {}
 
@@ -21,7 +23,6 @@ export class AuditController {
   }
 
   @Post('create')
-  @UseGuards(RolesGuard)
   @Roles(...MOD_ADMIN_ROLE)
   async createAuditByAdmin(@Body() createAuditByAdmin: CreateAuditByAdminDto) {
     return this.auditService.createAuditByAdmin(createAuditByAdmin);
@@ -32,7 +33,15 @@ export class AuditController {
     @CurrentUser() user: User,
     @Query() queryAuditDto: QueryAuditDto,
   ) {
-    return this.auditService.queryAuditByUser(user, queryAuditDto);
+    return this.auditService.queryAuditByUser( queryAuditDto,user);
+  }
+
+  @Get('all')
+  @Roles(...MOD_ADMIN_ROLE)
+  async getAllAuditHistory(
+    @Query() queryAuditDto: QueryAuditDto,
+  ) {
+    return this.auditService.queryAuditByUser(queryAuditDto);
   }
 
   @Patch('update/:id')

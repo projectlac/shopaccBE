@@ -21,6 +21,11 @@ export enum AUDIT_TYPE {
   STONE = 'STONE',
 }
 
+export const AUDIT_RELATION = {
+  USER :'user',
+  AUDIT_INFORMATIONS : 'auditInformations'
+}
+
 @Entity(AUDIT_TABLE_NAME)
 export class Audit extends BaseColumn {
   @ManyToOne(() => User, (user) => user.audits, { nullable: true })
