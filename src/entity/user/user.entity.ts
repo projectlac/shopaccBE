@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { Entity, Column, OneToMany } from 'typeorm';
+import { Entity, Column, OneToMany, BeforeInsert } from 'typeorm';
 import { Account } from '../account';
 import { Audit } from '../audit';
 import { BaseColumn } from '../base';
@@ -58,12 +58,18 @@ export class User extends BaseColumn {
   @OneToMany(() => Audit, (audit) => audit.user, { nullable: true })
   audits: Audit[];
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: 1 })
   avatar: number;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: 0 })
   money: number;
 
   @Column({ nullable: true })
-  webMoney: number;
+  phone: string;
+
+  @BeforeInsert()
+  setMoneyAndAvatar() {
+    this.avatar = this.avatar || 1;
+    this.money = this.money || 0;
+  }
 }

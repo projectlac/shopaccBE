@@ -61,4 +61,9 @@ export class AppController {
       'username',
     );
   }
+
+  @Get('excel')
+  async getDataExcel() {
+    return this.appService.getDataFromExcel();
+  }
 }
