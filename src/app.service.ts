@@ -15,7 +15,7 @@ export class AppService {
     let data = [];
     for (let i = 0; i < sheets.length; i++) {
       const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
-      temp.forEach(({ username, email, phone, role }) => {
+      temp.forEach(({ username, email, phone, role, password }) => {
         const truePhone = phone ? +`0${phone}` : '';
         const trueRole = role === '1' ? USER_ROLE.ADMIN : USER_ROLE.USER;
         data.push({
@@ -23,6 +23,7 @@ export class AppService {
           email,
           phone: truePhone,
           role: trueRole,
+          password,
         });
       });
     }
