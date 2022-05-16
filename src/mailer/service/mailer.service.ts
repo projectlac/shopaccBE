@@ -1,6 +1,6 @@
 import { AuditInformationDto } from '@/audit';
 import { MAILER_CONFIG, NAME_APP_COMPANY } from '@/core';
-import { Audit, AuditInformation } from '@/entity';
+import { Account, Audit, AuditInformation } from '@/entity';
 import { Injectable } from '@nestjs/common';
 import { createTransport, Transporter } from 'nodemailer';
 import * as hbs from 'nodemailer-express-handlebars';
@@ -78,6 +78,24 @@ export class MailerService {
       note,
       total,
     });
+    return this.transporter.sendMail(mailOptions);
+  }
+
+  async sendBuyAccountFromUser(
+    to: string,
+    account: Account,
+    username: string,
+    listImage: string[],
+  ) {
+    const mailOptions = getMailOptions(
+      to,
+      MAILER_TEMPLATE_ENUM.BUY_ACCOUNT_BY_USER,
+      {
+        username,
+        account,
+        listImage,
+      },
+    );
     return this.transporter.sendMail(mailOptions);
   }
 }

@@ -1,5 +1,6 @@
 import {
   CreateAmountTransferredHistoryDto,
+  CreateBuyAccountHistoryDto,
   CreateChangeRoleHistoryDto,
   CreateConfirmHistoryDto,
   CreateCreateAuditHistoryDto,
@@ -31,4 +32,11 @@ export const getHistoryCreateAuditMessage = (
 ): string => {
   const { UID, username } = historyCreateAudit;
   return `Tài khoản ${username} yêu cầu nạp vào ${UID}`;
+};
+
+export const getHistoryBuyAccountMessage = (
+  historyBuyAccount: CreateBuyAccountHistoryDto,
+): string => {
+  const { account, username } = historyBuyAccount;
+  return `Tài khoản tên ${account.name} có id ${account.id} đã được mua bởi người dùng ${username} với giá ${account.newPrice}`;
 };

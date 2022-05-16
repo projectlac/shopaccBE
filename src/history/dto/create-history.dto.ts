@@ -1,3 +1,5 @@
+import { Account } from '@/entity';
+
 export interface CreateChangeRoleHistoryDto {
   admin: string;
   username: string;
@@ -19,4 +21,9 @@ export abstract class CreateCreateAuditHistoryDto {
 
 export abstract class CreateConfirmHistoryDto extends CreateCreateAuditHistoryDto {
   admin: string;
+}
+
+export abstract class CreateBuyAccountHistoryDto {
+  username: string;
+  account: Account;
 }

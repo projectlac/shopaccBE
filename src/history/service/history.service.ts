@@ -6,6 +6,7 @@ import { HttpException } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import {
   CreateAmountTransferredHistoryDto,
+  CreateBuyAccountHistoryDto,
   CreateChangeRoleHistoryDto,
   CreateConfirmHistoryDto,
   CreateCreateAuditHistoryDto,
@@ -13,6 +14,7 @@ import {
 } from '../dto';
 import {
   getHistoryAmountTransferredMessage,
+  getHistoryBuyAccountMessage,
   getHistoryChangeRoleMessage,
   getHistoryConfirmMessage,
   getHistoryCreateAuditMessage,
@@ -63,6 +65,18 @@ export class HistoryService {
       this.historyRepository.create({
         historyMessage,
         type: HISTORY_TYPE.CHANGE_ROLE,
+      }),
+    );
+  }
+
+  async createHistoryBuyAccount(
+    createHistory: CreateBuyAccountHistoryDto,
+  ): Promise<History> {
+    const historyMessage = getHistoryBuyAccountMessage(createHistory);
+    return this.historyRepository.save(
+      this.historyRepository.create({
+        historyMessage,
+        type: HISTORY_TYPE.BUY_ACCOUNT_BY_USER,
       }),
     );
   }

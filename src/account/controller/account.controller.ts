@@ -8,16 +8,16 @@ import {
   Param,
   Patch,
   Post,
-  UploadedFile,
+  UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { v4 as uuid } from 'uuid';
-import { CreateAccountDto, UpdateAccountDto } from '../dto';
+import { CreateAccountDto } from '../dto';
 import { AccountService } from '../service';
 @Controller('account')
 @ApiTags('account')
@@ -26,9 +26,10 @@ import { AccountService } from '../service';
 export class AccountController {
   constructor(private accountService: AccountService) {}
 
+  @Roles(...MOD_ADMIN_ROLE)
   @Post('create')
   @UseInterceptors(
-    FileInterceptor('file', {
+    FilesInterceptor('files', 3, {
       storage: diskStorage({
         destination: './uploads',
         filename: (_req, file, cb) => {
@@ -41,34 +42,38 @@ export class AccountController {
   async createNewAccount(
     @Body() createAccountDto: CreateAccountDto,
     @CurrentUser() user: User,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFiles() files: Array<Express.Multer.File>,
   ) {
-    return this.accountService.createAccount(createAccountDto, user, file);
+    return this.accountService.createAccount(createAccountDto, user, files);
   }
 
-  @Patch('update/:id')
-  @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
-        destination: './uploads',
-        filename: (_req, file, cb) => {
-          const randomName = uuid();
-          cb(null, `${randomName}${extname(file.originalname)}`);
-        },
-      }),
-    }),
-  )
-  @ApiParam({
-    name: 'id',
-  })
-  async updateAccount(
-    @Param('id') id: string,
-    @Body() updateAccountDto: UpdateAccountDto,
-    @UploadedFile() file: Express.Multer.File,
-  ) {
-    return this.accountService.updateAccount(updateAccountDto, id, file);
+  @Patch('buy/:id')
+  async buyAccount(@CurrentUser() user: User, @Param('id') id: string) {
+    return this.accountService.buyAccountByUser(user, id);
   }
 
+  // @Patch('update/:id')
+  // @UseInterceptors(
+  //   FileInterceptor('file', {
+  //     storage: diskStorage({
+  //       destination: './uploads',
+  //       filename: (_req, file, cb) => {
+  //         const randomName = uuid();
+  //         cb(null, `${randomName}${extname(file.originalname)}`);
+  //       },
+  //     }),
+  //   }),
+  // )
+  // @ApiParam({
+  //   name: 'id',
+  // })
+  // async updateAccount(
+  //   @Param('id') id: string,
+  //   @Body() updateAccountDto: UpdateAccountDto,
+  //   @UploadedFile() file: Express.Multer.File,
+  // ) {
+  //   return this.accountService.updateAccount(updateAccountDto, id, file);
+  // }
   @Delete(':id')
   @Roles(...MOD_ADMIN_ROLE)
   async deleteAccount(@Param('id') id: string) {

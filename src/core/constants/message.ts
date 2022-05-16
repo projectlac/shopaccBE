@@ -31,6 +31,7 @@ export const TAG_MESSAGE = {
 
 export const ACCOUNT_MESSAGE = {
   NOT_FOUND: 'Tài khoản không tồn tại!',
+  SOLD: 'Tài khoản đã bán!',
 };
 
 export const AUDIT_MESSAGE = {

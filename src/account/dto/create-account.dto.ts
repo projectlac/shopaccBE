@@ -6,4 +6,12 @@ export class CreateAccountDto {
   char: string[];
   @ApiProperty()
   weapon: string[];
+  @ApiProperty()
+  name: string;
+  @ApiProperty()
+  oldPrice: number;
+  @ApiProperty()
+  newPrice: number;
+  @ApiProperty()
+  description: string;
 }

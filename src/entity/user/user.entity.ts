@@ -61,7 +61,7 @@ export class User extends BaseColumn {
   @Column({ nullable: true, default: 1 })
   avatar: number;
 
-  @Column({ nullable: true, default: 0 })
+  @Column({ nullable: true, default: 0, type: 'bigint' })
   money: number;
 
   @Column({ nullable: true })
