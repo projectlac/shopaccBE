@@ -11,12 +11,7 @@ export enum USER_ROLE {
   USER = 'USER',
 }
 
-export interface PayloadTokenUser {
-  username: string;
-  id: string;
-  role: USER_ROLE;
-  email?: string;
-}
+export interface PayloadTokenUser extends UserWithOutPassword {}
 
 export enum USER_RELATION {
   POSTS = 'posts',

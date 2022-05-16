@@ -152,9 +152,18 @@ export class AuditService {
     queryAuditDto: QueryAuditDto,
     user?: User,
   ): Promise<Audit[]> {
-    const { limit = DEFAULT_CONFIG.LIMIT, offset = DEFAULT_CONFIG.OFFSET } =
-      queryAuditDto;
-    const where = user ? { user } : {};
+    const {
+      limit = DEFAULT_CONFIG.LIMIT,
+      offset = DEFAULT_CONFIG.OFFSET,
+      status = '',
+    } = queryAuditDto;
+    const where = {};
+    if (user) {
+      where['user'] = user;
+    }
+    if (status) {
+      where['status'] = status;
+    }
     return this.auditRepository.find({
       take: limit,
       skip: offset,

@@ -54,8 +54,7 @@ export class AuthService {
   }
 
   async login(user: UserWithOutPassword) {
-    const { username, email, id, role } = user;
-    const payload: PayloadTokenUser = { username, email, id, role };
+    const payload: PayloadTokenUser = { ...user };
     return this.jwtService.sign(payload);
   }
 
@@ -195,15 +194,17 @@ export class AuthService {
   }
 
   async getAllUserList(queryUserDto: QueryUserDto): Promise<User[]> {
-    const { offset = DEFAULT_CONFIG.OFFSET, limit = DEFAULT_CONFIG.OFFSET } =
-      queryUserDto;
+    const {
+      offset = DEFAULT_CONFIG.OFFSET,
+      limit = DEFAULT_CONFIG.OFFSET,
+      role = '',
+    } = queryUserDto;
+    const where = role ? { role } : {};
     return this.userRepository.find({
       take: limit,
       skip: offset,
       select: ['id', 'username', 'email', 'money', 'role'],
-      where: {
-        role: USER_ROLE.USER,
-      },
+      where,
     });
   }
 }

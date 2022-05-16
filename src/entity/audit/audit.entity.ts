@@ -22,9 +22,9 @@ export enum AUDIT_TYPE {
 }
 
 export const AUDIT_RELATION = {
-  USER :'user',
-  AUDIT_INFORMATIONS : 'auditInformations'
-}
+  USER: 'user',
+  AUDIT_INFORMATIONS: 'auditInformations',
+};
 
 @Entity(AUDIT_TABLE_NAME)
 export class Audit extends BaseColumn {
@@ -37,8 +37,8 @@ export class Audit extends BaseColumn {
   @Column({ nullable: true })
   server: string;
 
-  @Column({nullable:true})
-  note:string
+  @Column({ nullable: true })
+  note: string;
 
   @Column({ nullable: true })
   total: number;
