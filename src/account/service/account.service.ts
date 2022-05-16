@@ -131,9 +131,9 @@ export class AccountService {
   async buyAccountByUser(user: User, id: string) {
     return this.connection.transaction(async () => {
       const account = await this.accountRepository.checkExistAccount(id);
-      // if (account.status === ACCOUNT_STATUS.SOLD || account.soldAt) {
-      //   throw new HttpException(ACCOUNT_MESSAGE.SOLD, HttpStatus.BAD_GATEWAY);
-      // }
+      if (account.status === ACCOUNT_STATUS.SOLD || account.soldAt) {
+        throw new HttpException(ACCOUNT_MESSAGE.SOLD, HttpStatus.BAD_GATEWAY);
+      }
       account.status = ACCOUNT_STATUS.SOLD;
       account.soldAt = new Date();
       if (user.money < account.newPrice) {
@@ -150,7 +150,7 @@ export class AccountService {
         this.userRepository.save(user),
         this.accountRepository.save(account),
         this.mailerService.sendBuyAccountFromUser(
-          QUILL_LIANG_EMAIL,
+          TIM_DANG_EMAIL,
           account,
           user.username,
           listImage,
