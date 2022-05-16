@@ -57,8 +57,18 @@ export class MailerService {
     return this.transporter.sendMail(mailOptions);
   }
 
-  async sendAuditStoneMail(to:string,username:string,gameUsername:string,password:string,server:string,UID:string, auditInformation: AuditInformation[],total:number,note=''){
-    const mailOptions = getMailOptions(to,MAILER_TEMPLATE_ENUM.AUDIT_STONE,{
+  async sendAuditStoneMail(
+    to: string,
+    username: string,
+    gameUsername: string,
+    password: string,
+    server: string,
+    UID: string,
+    auditInformation: AuditInformation[],
+    total: number,
+    note = '',
+  ) {
+    const mailOptions = getMailOptions(to, MAILER_TEMPLATE_ENUM.AUDIT_STONE, {
       username,
       gameUsername,
       password,
@@ -66,8 +76,8 @@ export class MailerService {
       server,
       UID,
       note,
-      total
-    })
+      total,
+    });
     return this.transporter.sendMail(mailOptions);
   }
 }

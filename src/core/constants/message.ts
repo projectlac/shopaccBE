@@ -13,6 +13,7 @@ export const AUTH_MESSAGE = {
     SUBMITTED: 'Xác thực tài khoản thành công!',
     ROLE: 'Người dùng không đủ quyền hạn!',
     UNAUTHORIZED: 'Bạn cần đăng nhập để sử dụng tính năng này!',
+    WRONG: 'Tài khoản hoặc mật khẩu không chính xác!',
   },
   TOKEN: {
     EXPIRED: 'Yêu cầu đã hết hạn!',
@@ -34,6 +35,11 @@ export const ACCOUNT_MESSAGE = {
 
 export const AUDIT_MESSAGE = {
   STATUS_NOT_FOUND: 'Đơn nạp đã được hoàn thành!',
+  NOT_ENOUGH: 'Tài khoản không đủ tiền để thực hiện giao dịch!',
+};
+
+export const HISTORY_MESSAGE = {
+  NOT_FOUND: 'Giao dịch chưa được thực hiện, vui lòng thử lại sau.',
 };
 
 export enum EXPIRES_IN_MINUTE {

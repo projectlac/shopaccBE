@@ -77,7 +77,10 @@ export class AuthController {
 
   @Patch('update-role')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  updateRoleUser(@CurrentUser() user: User,@Body() updateUserRole: UpdateUserRoleDto) {
-    return this.authService.updateUserRole(user,updateUserRole);
+  updateRoleUser(
+    @CurrentUser() user: User,
+    @Body() updateUserRole: UpdateUserRoleDto,
+  ) {
+    return this.authService.updateUserRole(user, updateUserRole);
   }
 }

@@ -42,7 +42,7 @@ export class AuthService {
     private userRepository: UserRepository,
     private jwtService: JwtService,
     private mailerService: MailerService,
-    private historyService:HistoryService
+    private historyService: HistoryService,
   ) {}
 
   async validateUser(username: string, password: string): Promise<User | null> {
@@ -148,10 +148,13 @@ export class AuthService {
         HttpStatus.REQUEST_TIMEOUT,
       );
     }
-    const user = await this.userRepository.findOne({username})
+    const user = await this.userRepository.findOne({ username });
     // await this.userRepository.update({ username }, { password });
-    const changedPasswordUser = await this.userRepository.save({...user,password})
-    return this.login(changedPasswordUser)
+    const changedPasswordUser = await this.userRepository.save({
+      ...user,
+      password,
+    });
+    return this.login(changedPasswordUser);
   }
 
   async createAdminUser(createUserDto: CreateUserDto): Promise<User> {
@@ -166,9 +169,9 @@ export class AuthService {
   }
 
   async updateUserRole(
-    user:User,
+    user: User,
     updateUserRoleDto: UpdateUserRoleDto,
-  ): Promise<[User,History | void]> {
+  ): Promise<[User, History]> {
     const { username, role } = updateUserRoleDto;
     const checkUser = await this.userRepository.findOne({ username });
     if (!checkUser)
@@ -176,7 +179,15 @@ export class AuthService {
         AUTH_MESSAGE.USER.NOT_FOUND,
         HttpStatus.NOT_FOUND,
       );
-    return Promise.all([this.userRepository.save({...checkUser,role}),this.historyService.createHistory({admin:user.username,username,oldRole:checkUser.role,newRole:role},HISTORY_TYPE.CHANGE_ROLE)]);
+    return Promise.all([
+      this.userRepository.save({ ...checkUser, role }),
+      this.historyService.createHistoryChangeRole({
+        admin: user.username,
+        username,
+        oldRole: checkUser.role,
+        newRole: role,
+      }),
+    ]);
   }
 
   async getAllUser(): Promise<User[]> {
@@ -189,7 +200,7 @@ export class AuthService {
     return this.userRepository.find({
       take: limit,
       skip: offset,
-      select:['id','username','email','money','role'],
+      select: ['id', 'username', 'email', 'money', 'role'],
       where: {
         role: USER_ROLE.USER,
       },
