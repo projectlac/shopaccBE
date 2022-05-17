@@ -24,6 +24,14 @@ export class PostGetController {
     return this.postService.getPostById(id);
   }
 
+  @ApiParam({
+    name: 'slug',
+  })
+  @Get('details/:slug')
+  async getPostBySlug(@Param('slug') slug: string) {
+    return this.postService.getPostBySlug(slug);
+  }
+
   @Get('tags')
   async getAllPostByTag(@Query() queryPostByTag: QueryPostTagDto) {
     return this.postService.getAllByTag(queryPostByTag);

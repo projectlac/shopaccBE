@@ -30,14 +30,15 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   @ApiBody({ type: LoginUserDto })
-  async login(@CurrentUser() currentUser: UserWithOutPassword) {
+  async login(@CurrentUser() currentUser: User) {
     return this.authService.login(currentUser);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@CurrentUser() currentUser: UserWithOutPassword) {
-    return currentUser;
+  getProfile(@CurrentUser() currentUser: User) {
+    const { password, ...userInformation } = currentUser;
+    return userInformation;
   }
 
   @Post('sign-up')

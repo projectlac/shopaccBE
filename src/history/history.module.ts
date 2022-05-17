@@ -6,7 +6,7 @@ import { HistoryService } from './service';
 const providers = [HistoryService];
 
 @Module({
-  controllers:[HistoryController],
+  controllers: [HistoryController],
   imports: [RepositoryModule],
   providers,
   exports: providers,

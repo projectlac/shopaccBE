@@ -10,6 +10,7 @@ import {
   QueryPostTagDto,
   UpdatePostDto,
 } from '../dto';
+import { changeToSlug } from '../util';
 
 @Injectable()
 export class PostService {
@@ -36,7 +37,10 @@ export class PostService {
       cloundinary,
       imageUrl: cloundinary.url || cloundinary.secure_url,
     });
-    return this.postRepository.save(newPost);
+    return this.postRepository.save({
+      ...newPost,
+      slug: changeToSlug(title, newPost.createdAt),
+    });
   }
 
   async deletePost(id: string) {
@@ -84,7 +88,10 @@ export class PostService {
           this.cloundinaryService.deleteFile(public_id),
         ]);
       }
-      return this.postRepository.update({ id }, { ...updatePostDto });
+      const slug = updatePostDto.title
+        ? changeToSlug(updatePostDto.title, post.createdAt)
+        : post.slug;
+      return this.postRepository.update({ id }, { ...updatePostDto, slug });
     } catch (error) {
       console.log(error);
       throw error;
@@ -92,7 +99,11 @@ export class PostService {
   }
 
   async getAll(queryPost: QueryPostDto): Promise<BaseQueryResponse<Post>> {
-    const { offset = 0, limit = POST_CONFIG.LIMIT } = queryPost;
+    const { offset = 0, limit = POST_CONFIG.LIMIT, slug } = queryPost;
+    const where = {};
+    if (slug) {
+      where['slug'] = slug;
+    }
     const data = await this.postRepository.find({
       skip: offset,
       take: limit,
@@ -127,6 +138,13 @@ export class PostService {
   async getPostById(id: string): Promise<Post> {
     return this.postRepository.findOne({
       where: { id },
+      select: ['content', 'description', 'imageUrl', 'id', 'title'],
+    });
+  }
+
+  async getPostBySlug(slug: string): Promise<Post> {
+    return this.postRepository.findOne({
+      where: { slug },
       select: ['content', 'description', 'imageUrl', 'id', 'title'],
     });
   }

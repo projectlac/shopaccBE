@@ -1,4 +1,6 @@
+import { changeToSlug } from '@/post';
 import {
+  BeforeInsert,
   Column,
   Entity,
   JoinColumn,
@@ -26,13 +28,16 @@ export class Post extends BaseColumn {
   @Column()
   title: string;
 
+  @Column({ nullable: true })
+  slug: string;
+
   @Column({ type: 'text' })
   content: string;
 
-  @Column({ type: 'text', nullable:true })
+  @Column({ type: 'text', nullable: true })
   description: string;
-  @Column({nullable:true})
-  imageUrl:string
+  @Column({ nullable: true })
+  imageUrl: string;
   @OneToOne(() => Cloundinary, { nullable: true })
   @JoinColumn()
   cloundinary: Cloundinary;

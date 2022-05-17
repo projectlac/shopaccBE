@@ -4,7 +4,7 @@ module.exports = {
   // port: parseInt(process.env['POSTGRES_PORT'] || '5432', 10),
   // username: process.env['POSTGRES_USER'] || 'postgres',
   // password: process.env['POSTGRES_PASSWORD'] || 'postgres',
-  // database: process.env['POSTGRES_DB'] || 'shopDB',
+  // database: process.env['POSTGRES_DB'] || 'shoppAcc',
   url: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false },
   synchronize: !!JSON.parse(process.env['TYPEORM_SYNCHRONIZE'] || 'true'),

@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { map } from 'rxjs';
 import { Observable } from 'rxjs';
+import { changeToSlug } from '../util';
 
 @Injectable()
 export class GetAllPostInterceptor implements NestInterceptor {
@@ -16,13 +17,23 @@ export class GetAllPostInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map((data: BaseQueryResponse<Post>) => {
         const formattedData = data.data.map(
-          ({ content, updatedAt, description, id, title, cloundinary }) => ({
+          ({
+            content,
+            updatedAt,
+            description,
+            id,
+            title,
+            cloundinary,
+            slug,
+            createdAt,
+          }) => ({
             content,
             updatedAt,
             description,
             id,
             title,
             cloundinary: cloundinary.url || cloundinary.secure_url,
+            slug: slug ? slug : changeToSlug(title, createdAt),
           }),
         );
         return { ...data, data: formattedData };
