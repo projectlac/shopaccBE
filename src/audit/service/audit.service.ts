@@ -116,9 +116,9 @@ export class AuditService {
             HttpStatus.NOT_FOUND,
           );
         const oldMoney = userAudit?.money || 0;
-        let newMoney = oldMoney;
+        let newMoney = +oldMoney;
         if (createAudit.typeTransfer === TYPE_TRANSFER.MINUS) {
-          newMoney = oldMoney - createAudit.amountTransferred;
+          newMoney = newMoney - createAudit.amountTransferred;
           if (newMoney < 0) {
             throw new HttpException(
               AUDIT_MESSAGE.NOT_ENOUGH,
@@ -127,8 +127,9 @@ export class AuditService {
           }
         }
         if (createAudit.typeTransfer === TYPE_TRANSFER.PLUS) {
-          newMoney = oldMoney + createAudit.amountTransferred;
+          newMoney = newMoney + createAudit.amountTransferred;
         }
+        userAudit.money = newMoney;
         return Promise.all([
           this.userRepository.save(userAudit),
           this.auditRepository.save({ user: userAudit, ...createAudit }),
