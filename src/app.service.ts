@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import * as reader from 'xlsx';
 import { USER_ROLE } from './entity';
-import { UserRepository } from './repository';
+import { changeToSlug } from './post';
+import { PostRepository, UserRepository } from './repository';
 @Injectable()
 export class AppService {
-  constructor(private userRepository: UserRepository) {}
+  constructor(
+    private userRepository: UserRepository,
+    private postRepository: PostRepository,
+  ) {}
   getHello(): string {
     return 'Hello World!';
   }
@@ -29,5 +33,18 @@ export class AppService {
     }
     const listUsers = this.userRepository.create(data);
     return this.userRepository.save(listUsers);
+  }
+
+  async updateSlugPost() {
+    const listPostNoSlug = await this.postRepository.find({
+      where: [{ slug: '' }, { slug: null }],
+    });
+    const promiseUpdateSlug = listPostNoSlug.map((post) =>
+      this.postRepository.save({
+        ...post,
+        slug: changeToSlug(post.title, post.createdAt),
+      }),
+    );
+    await Promise.all([...promiseUpdateSlug]);
   }
 }
