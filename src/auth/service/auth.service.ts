@@ -224,6 +224,10 @@ export class AuthService {
       skip: offset,
       select: ['id', 'username', 'email', 'money', 'role'],
       where,
+      order: {
+        role: 'ASC',
+        username: 'ASC',
+      },
     });
     return {
       data,
