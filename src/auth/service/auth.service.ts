@@ -4,6 +4,7 @@ import {
   EXPIRES_IN_MINUTE,
   hashedPassword,
   DEFAULT_CONFIG,
+  BaseQueryResponse,
 } from '@/core/';
 import {
   History,
@@ -201,18 +202,32 @@ export class AuthService {
     return this.userRepository.find();
   }
 
-  async getAllUserList(queryUserDto: QueryUserDto): Promise<User[]> {
+  async getAllUserList(
+    queryUserDto: QueryUserDto,
+  ): Promise<BaseQueryResponse<User>> {
     const {
       offset = DEFAULT_CONFIG.OFFSET,
       limit = DEFAULT_CONFIG.OFFSET,
       role = '',
+      username = '',
     } = queryUserDto;
-    const where = role ? { role } : {};
-    return this.userRepository.find({
+    const where = {};
+    if (role) {
+      where['role'] = role;
+    }
+    if (username) {
+      where['username'] = username;
+    }
+    const total = await this.userRepository.count({ where });
+    const data = await this.userRepository.find({
       take: limit,
       skip: offset,
       select: ['id', 'username', 'email', 'money', 'role'],
       where,
     });
+    return {
+      data,
+      total,
+    };
   }
 }

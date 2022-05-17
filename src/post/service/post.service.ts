@@ -1,5 +1,5 @@
 import { CloundinaryService } from '@/cloudinary';
-import { POST_CONFIG, POST_MESSAGE } from '@/core';
+import { BaseQueryResponse, POST_CONFIG, POST_MESSAGE } from '@/core';
 import { Post, POST_RELATION, User } from '@/entity';
 import { PostRepository, TagRepository } from '@/repository';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
@@ -24,7 +24,7 @@ export class PostService {
     user: User,
     file?: Express.Multer.File,
   ): Promise<Post> {
-    const { title, content, tags,description } = createPostDto;
+    const { title, content, tags, description } = createPostDto;
     const cloundinary = file
       ? await this.cloundinaryService.uploadFile(file)
       : null;
@@ -34,7 +34,7 @@ export class PostService {
       user,
       description,
       cloundinary,
-      imageUrl:cloundinary.url || cloundinary.secure_url
+      imageUrl: cloundinary.url || cloundinary.secure_url,
     });
     return this.postRepository.save(newPost);
   }
@@ -79,7 +79,7 @@ export class PostService {
             ...post,
             image,
             ...updatePostDto,
-            imageUrl:image.url || image.secure_url
+            imageUrl: image.url || image.secure_url,
           }),
           this.cloundinaryService.deleteFile(public_id),
         ]);
@@ -91,19 +91,16 @@ export class PostService {
     }
   }
 
-  async getAll(queryPost: QueryPostDto): Promise<Post[]> {
+  async getAll(queryPost: QueryPostDto): Promise<BaseQueryResponse<Post>> {
     const { offset = 0, limit = POST_CONFIG.LIMIT } = queryPost;
-    return this.postRepository
-      .find({
-        skip: offset,
-        take: limit,
-        // relations: [POST_RELATION.TAG],
-        select:['content','updatedAt','description','id','title']
-      })
-      .catch((err) => {
-        console.log(err);
-        throw err;
-      });
+    const data = await this.postRepository.find({
+      skip: offset,
+      take: limit,
+      relations: [POST_RELATION.CLOUNDINARY],
+      // select: ['content', 'updatedAt', 'description', 'id', 'title'],
+    });
+    const total = await this.postRepository.count();
+    return { data, total };
   }
 
   async getAllByTag(queryPostTag: QueryPostTagDto): Promise<Post[]> {
@@ -127,9 +124,10 @@ export class PostService {
     }
   }
 
-  async getPostById(id:string):Promise<Post>{
-      return this.postRepository.findOne({where:{id},
-        select:['content','description','imageUrl','id','title']
-      })
+  async getPostById(id: string): Promise<Post> {
+    return this.postRepository.findOne({
+      where: { id },
+      select: ['content', 'description', 'imageUrl', 'id', 'title'],
+    });
   }
 }

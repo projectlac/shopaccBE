@@ -11,11 +11,11 @@ export class CreateAuditDto {
   @ApiProperty()
   server: string;
   @ApiProperty()
-  username:string;
+  username: string;
   @ApiProperty()
-  password:string;
+  password: string;
   @ApiProperty()
-  note:string
+  note: string;
   @ApiProperty({ type: () => [AuditInformationDto] })
   auditInformation: AuditInformationDto[];
 }

@@ -1,6 +1,7 @@
 import {
   AUDIT_MESSAGE,
   AUTH_MESSAGE,
+  BaseQueryResponse,
   DEFAULT_CONFIG,
   HISTORY_MESSAGE,
 } from '@/core';
@@ -151,7 +152,7 @@ export class AuditService {
   async queryAuditByUser(
     queryAuditDto: QueryAuditDto,
     user?: User,
-  ): Promise<Audit[]> {
+  ): Promise<BaseQueryResponse<Audit>> {
     const {
       limit = DEFAULT_CONFIG.LIMIT,
       offset = DEFAULT_CONFIG.OFFSET,
@@ -164,12 +165,17 @@ export class AuditService {
     if (status) {
       where['status'] = status;
     }
-    return this.auditRepository.find({
+    const total = await this.auditRepository.count({ where });
+    const data = await this.auditRepository.find({
       take: limit,
       skip: offset,
       where,
       relations: [AUDIT_RELATION.USER, AUDIT_RELATION.AUDIT_INFORMATIONS],
     });
+    return {
+      total,
+      data,
+    };
   }
 
   async updateStatusAudit(user: User, id: string) {

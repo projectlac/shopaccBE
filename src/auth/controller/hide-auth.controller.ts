@@ -8,10 +8,10 @@ import { ApiTags } from '@nestjs/swagger';
 export class HideAuthController {
   constructor(private authService: AuthService) {}
 
-  @Post()
-  async createAdminUser(@Body() createUserDto: CreateUserDto) {
-    return this.authService.createAdminUser(createUserDto);
-  }
+  // @Post()
+  // async createAdminUser(@Body() createUserDto: CreateUserDto) {
+  //   return this.authService.createAdminUser(createUserDto);
+  // }
 
   @Get()
   async getAllUser() {

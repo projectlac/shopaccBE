@@ -2,6 +2,7 @@ import { CloundinaryService } from '@/cloudinary';
 import {
   ACCOUNT_MESSAGE,
   AUDIT_MESSAGE,
+  BaseQueryResponse,
   POST_CONFIG,
   QUILL_LIANG_EMAIL,
   TIM_DANG_EMAIL,
@@ -99,7 +100,9 @@ export class AccountService {
   //   return this.accountRepository.save(account);
   // }
 
-  async queryAccount(queryAccountDto: QueryAccountDto): Promise<Account[]> {
+  async queryAccount(
+    queryAccountDto: QueryAccountDto,
+  ): Promise<BaseQueryResponse<Account>> {
     const { offset = 0, limit = POST_CONFIG.LIMIT, weapon } = queryAccountDto;
     const findWeaponQuery = this.accountRepository
       .createQueryBuilder('account')
@@ -112,7 +115,12 @@ export class AccountService {
         });
       });
     }
-    return findWeaponQuery.offset(offset).limit(limit).getMany();
+    const total = await findWeaponQuery.getCount();
+    const data = await findWeaponQuery.offset(offset).limit(limit).getMany();
+    return {
+      total,
+      data,
+    };
   }
 
   async removeAccount(id: string) {

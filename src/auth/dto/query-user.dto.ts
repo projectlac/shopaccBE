@@ -5,4 +5,6 @@ import { ApiProperty } from '@nestjs/swagger';
 export class QueryUserDto extends BaseQuery {
   @ApiProperty()
   role?: USER_ROLE;
+  @ApiProperty()
+  username?: string;
 }

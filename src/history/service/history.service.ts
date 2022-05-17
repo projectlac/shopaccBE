@@ -1,4 +1,4 @@
-import { DEFAULT_CONFIG, HISTORY_MESSAGE } from '@/core';
+import { BaseQueryResponse, DEFAULT_CONFIG, HISTORY_MESSAGE } from '@/core';
 import { History, HISTORY_TYPE } from '@/entity';
 import { HistoryRepository } from '@/repository';
 import { HttpStatus } from '@nestjs/common';
@@ -81,13 +81,17 @@ export class HistoryService {
     );
   }
 
-  async queryHistory(queryHistory: QueryHistoryDto): Promise<History[]> {
+  async queryHistory(
+    queryHistory: QueryHistoryDto,
+  ): Promise<BaseQueryResponse<History>> {
     const { offset = DEFAULT_CONFIG.OFFSET, limit = DEFAULT_CONFIG.LIMIT } =
       queryHistory;
     const findHistoryQuery = this.historyRepository
       .createQueryBuilder('history')
       .offset(offset)
       .limit(limit);
-    return findHistoryQuery.getMany();
+    const total = await this.historyRepository.count();
+    const data = await findHistoryQuery.getMany();
+    return { total, data };
   }
 }
