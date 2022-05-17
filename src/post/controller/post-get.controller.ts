@@ -27,7 +27,7 @@ export class PostGetController {
   @ApiParam({
     name: 'slug',
   })
-  @Get('details/:slug')
+  @Get('details/news/:slug')
   async getPostBySlug(@Param('slug') slug: string) {
     return this.postService.getPostBySlug(slug);
   }
