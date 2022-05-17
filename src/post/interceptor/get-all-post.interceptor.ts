@@ -16,12 +16,13 @@ export class GetAllPostInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map((data: BaseQueryResponse<Post>) => {
         const formattedData = data.data.map(
-          ({ content, updatedAt, description, id, title }) => ({
+          ({ content, updatedAt, description, id, title, cloundinary }) => ({
             content,
             updatedAt,
             description,
             id,
             title,
+            cloundinary: cloundinary.url || cloundinary.secure_url,
           }),
         );
         return { ...data, data: formattedData };

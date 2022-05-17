@@ -17,7 +17,7 @@ export const getHistoryAmountTransferredMessage = (
   historyAmountTransferrd: CreateAmountTransferredHistoryDto,
 ): string => {
   const { admin, newMoney, oldMoney, username } = historyAmountTransferrd;
-  return `Admin ${admin} thay đổi tiền của tài khoản ${username} từ ${oldMoney} lên ${newMoney}`;
+  return `Admin ${admin} thay đổi tiền của tài khoản ${username} từ ${oldMoney} thành ${newMoney}`;
 };
 
 export const getHistoryConfirmMessage = (
