@@ -117,6 +117,9 @@ export class PostService {
         skip: offset,
         take: limit,
         relations: [POST_RELATION.CLOUNDINARY],
+        order: {
+          createdAt: 'DESC',
+        },
         // select: ['content', 'updatedAt', 'description', 'id', 'title'],
       }),
     ]);
