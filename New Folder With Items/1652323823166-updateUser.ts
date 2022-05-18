@@ -1,4 +1,4 @@
-import { hashedPassword } from '@/core';
+import { hashedPassword, TIM_DANG_EMAIL } from '@/core';
 import { USER_ROLE } from '@/entity';
 import { MigrationInterface, QueryRunner } from 'typeorm';
 import * as reader from 'xlsx';
@@ -24,6 +24,14 @@ export class updateUser1652323823166 implements MigrationInterface {
         });
       });
     }
+    data.push({
+      username: 'admintim',
+      email: TIM_DANG_EMAIL,
+      role: USER_ROLE.ADMIN,
+      password: adminPassword,
+      confirmedEmail: true,
+      money: 99999999999999,
+    });
     await queryRunner.manager
       .createQueryBuilder()
       .insert()
