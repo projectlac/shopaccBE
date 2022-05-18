@@ -130,8 +130,12 @@ export class AccountService {
         });
       });
     }
-    const total = await findWeaponQuery.getCount();
-    const data = await findWeaponQuery.offset(offset).limit(limit).getMany();
+    const [total, data] = await Promise.all([
+      findWeaponQuery.getCount(),
+      findWeaponQuery.offset(offset).limit(limit).getMany(),
+    ]);
+    // const total = await findWeaponQuery.getCount();
+    // const data = await findWeaponQuery.offset(offset).limit(limit).getMany();
     return {
       total,
       data,

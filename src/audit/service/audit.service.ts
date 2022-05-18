@@ -166,13 +166,22 @@ export class AuditService {
     if (status) {
       where['status'] = status;
     }
-    const total = await this.auditRepository.count({ where });
-    const data = await this.auditRepository.find({
-      take: limit,
-      skip: offset,
-      where,
-      relations: [AUDIT_RELATION.USER, AUDIT_RELATION.AUDIT_INFORMATIONS],
-    });
+    // const total = await this.auditRepository.count({ where });
+    // const data = await this.auditRepository.find({
+    //   take: limit,
+    //   skip: offset,
+    //   where,
+    //   relations: [AUDIT_RELATION.USER, AUDIT_RELATION.AUDIT_INFORMATIONS],
+    // });
+    const [total, data] = await Promise.all([
+      this.auditRepository.count({ where }),
+      this.auditRepository.find({
+        take: limit,
+        skip: offset,
+        where,
+        relations: [AUDIT_RELATION.USER, AUDIT_RELATION.AUDIT_INFORMATIONS],
+      }),
+    ]);
     return {
       total,
       data,

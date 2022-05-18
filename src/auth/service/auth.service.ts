@@ -218,17 +218,30 @@ export class AuthService {
     if (username) {
       where['username'] = username;
     }
-    const total = await this.userRepository.count({ where });
-    const data = await this.userRepository.find({
-      take: limit,
-      skip: offset,
-      select: ['id', 'username', 'email', 'money', 'role'],
-      where,
-      order: {
-        role: 'ASC',
-        username: 'ASC',
-      },
-    });
+    // const total = await this.userRepository.count({ where });
+    // const data = await this.userRepository.find({
+    //   take: limit,
+    //   skip: offset,
+    //   select: ['id', 'username', 'email', 'money', 'role'],
+    //   where,
+    //   order: {
+    //     role: 'ASC',
+    //     username: 'ASC',
+    //   },
+    // });
+    const [total, data] = await Promise.all([
+      this.userRepository.count({ where }),
+      this.userRepository.find({
+        take: limit,
+        skip: offset,
+        select: ['id', 'username', 'email', 'money', 'role'],
+        where,
+        order: {
+          role: 'ASC',
+          username: 'ASC',
+        },
+      }),
+    ]);
     return {
       data,
       total,

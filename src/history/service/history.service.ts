@@ -90,8 +90,12 @@ export class HistoryService {
       .createQueryBuilder('history')
       .offset(offset)
       .limit(limit);
-    const total = await this.historyRepository.count();
-    const data = await findHistoryQuery.getMany();
+    // const total = await this.historyRepository.count();
+    // const data = await findHistoryQuery.getMany();
+    const [total, data] = await Promise.all([
+      this.historyRepository.count(),
+      findHistoryQuery.getMany(),
+    ]);
     return { total, data };
   }
 }

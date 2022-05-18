@@ -104,13 +104,22 @@ export class PostService {
     if (slug) {
       where['slug'] = slug;
     }
-    const data = await this.postRepository.find({
-      skip: offset,
-      take: limit,
-      relations: [POST_RELATION.CLOUNDINARY],
-      // select: ['content', 'updatedAt', 'description', 'id', 'title'],
-    });
-    const total = await this.postRepository.count();
+    // const data = await this.postRepository.find({
+    //   skip: offset,
+    //   take: limit,
+    //   relations: [POST_RELATION.CLOUNDINARY],
+    //   // select: ['content', 'updatedAt', 'description', 'id', 'title'],
+    // });
+    // const total = await this.postRepository.count();
+    const [total, data] = await Promise.all([
+      this.postRepository.count(),
+      this.postRepository.find({
+        skip: offset,
+        take: limit,
+        relations: [POST_RELATION.CLOUNDINARY],
+        // select: ['content', 'updatedAt', 'description', 'id', 'title'],
+      }),
+    ]);
     return { data, total };
   }
 
