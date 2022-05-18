@@ -39,7 +39,7 @@ export class PostService {
     });
     return this.postRepository.save({
       ...newPost,
-      slug: changeToSlug(title, newPost.createdAt),
+      slug: changeToSlug(title, new Date()),
     });
   }
 
