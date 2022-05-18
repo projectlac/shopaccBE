@@ -5,14 +5,7 @@ import {
   DEFAULT_CONFIG,
   HISTORY_MESSAGE,
 } from '@/core';
-import {
-  Audit,
-  AUDIT_RELATION,
-  AUDIT_STATUS,
-  History,
-  User,
-  UserWithOutPassword,
-} from '@/entity';
+import { Audit, AUDIT_RELATION, AUDIT_STATUS, History, User } from '@/entity';
 import { MailerService } from '@/mailer';
 import {
   AuditInformationRepository,

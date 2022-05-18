@@ -15,6 +15,10 @@ export class CreateAuditDto {
   @ApiProperty()
   password: string;
   @ApiProperty()
+  accountName: string;
+  @ApiProperty()
+  phone: string;
+  @ApiProperty()
   note: string;
   @ApiProperty({ type: () => [AuditInformationDto] })
   auditInformation: AuditInformationDto[];

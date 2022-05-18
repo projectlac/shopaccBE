@@ -38,6 +38,14 @@ export class Audit extends BaseColumn {
   server: string;
 
   @Column({ nullable: true })
+  username: string;
+  @Column({ nullable: true })
+  password: string;
+  @Column({ nullable: true })
+  accountName: string;
+  @Column({ nullable: true })
+  phone: string;
+  @Column({ nullable: true })
   note: string;
 
   @Column({ nullable: true })
