@@ -3,6 +3,8 @@ import {
   Entity,
   Generated,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   OneToOne,
@@ -10,6 +12,7 @@ import {
 import { BaseColumn } from '../base';
 import { Cloundinary } from '../cloudinary';
 import { Driver } from '../driver';
+import { Tag } from '../tag';
 import { User } from '../user';
 
 export const ACCOUNT_TABLE_NAME = 'account';
@@ -48,18 +51,6 @@ export class Account extends BaseColumn {
   @Column()
   ar: number;
 
-  @Column({ type: 'text' })
-  char: string;
-
-  @Column({ type: 'text' })
-  weapon: string;
-
-  @Column()
-  charCount: number;
-
-  @Column()
-  weaponCount: number;
-
   @Column({ nullable: true })
   soldAt: Date;
 
@@ -71,4 +62,7 @@ export class Account extends BaseColumn {
 
   @Column({ nullable: true, type: 'text' })
   imageUrl: string;
+
+  @ManyToMany(() => Tag, (tag) => tag.accounts)
+  tags: Tag[];
 }

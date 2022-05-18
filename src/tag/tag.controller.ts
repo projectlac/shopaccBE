@@ -8,10 +8,11 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { CreateTagDto, UpdateTagDto } from './dto';
+import { CreateTagDto, QueryTagDto, UpdateTagDto } from './dto';
 import { TagService } from './tag.service';
 import { ApiTags, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { MOD_ADMIN_ROLE } from '@/core';
+import { Query } from '@nestjs/common';
 
 @Controller('tag')
 @ApiTags('tag')
@@ -33,7 +34,7 @@ export class TagController {
   }
 
   @Get()
-  async getAllTag() {
-    return this.tagService.getAll();
+  async getAllTag(@Query() queryTag: QueryTagDto) {
+    return this.tagService.getAll(queryTag);
   }
 }

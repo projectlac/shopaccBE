@@ -7,16 +7,23 @@ import {
   QUILL_LIANG_EMAIL,
   TIM_DANG_EMAIL,
 } from '@/core';
-import { Account, ACCOUNT_RELATION, ACCOUNT_STATUS, User } from '@/entity';
+import {
+  Account,
+  ACCOUNT_RELATION,
+  ACCOUNT_STATUS,
+  TAG_TYPE,
+  User,
+} from '@/entity';
 import { HistoryService } from '@/history';
 import { MailerService } from '@/mailer';
 import {
   AccountRepository,
   DriverRepository,
+  TagRepository,
   UserRepository,
 } from '@/repository';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { Connection } from 'typeorm';
+import { Connection, In } from 'typeorm';
 import { CreateAccountDto, QueryAccountDto, UpdateAccountDto } from '../dto';
 
 @Injectable()
@@ -28,6 +35,7 @@ export class AccountService {
     private historyService: HistoryService,
     private userRepository: UserRepository,
     private mailerService: MailerService,
+    private tagRepository: TagRepository,
   ) {}
 
   async createAccount(
@@ -40,23 +48,30 @@ export class AccountService {
       const cloundinary = await this.cloundinaryService.uploadMultiFilesAccount(
         files,
       );
-      const charCount = char.length;
-      const weaponCount = weapon.length;
-      const charString = JSON.stringify(char);
-      const weaponString = JSON.stringify(weapon);
+      const [charTag, weaponTag] = await Promise.all([
+        this.tagRepository.find({
+          where: {
+            title: In(char),
+            type: TAG_TYPE.CHARACTER,
+          },
+        }),
+        this.tagRepository.find({
+          where: {
+            title: In(weapon),
+            type: TAG_TYPE.WEAPON,
+          },
+        }),
+      ]);
       const imageUrl = JSON.stringify(
         cloundinary.map((d) => d.url || d.secure_url),
       );
       const newAccount = this.accountRepository.create({
         ar,
         ...createAccountDto,
-        char: charString,
-        weapon: weaponString,
-        charCount,
-        weaponCount,
         user,
         cloundinary,
         imageUrl,
+        tags: [...charTag, ...weaponTag],
       });
       return this.accountRepository.save(newAccount);
     });
